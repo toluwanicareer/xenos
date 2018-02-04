@@ -1,0 +1,182 @@
+{% load staticfiles %}
+<DOCTYPE html>
+<html class="wide wow-animation" lang="en">
+  
+<!-- Mirrored from static.livedemo00.template-help.com/wt_prod-12803/ by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 03 Feb 2018 15:03:08 GMT -->
+<head>
+    <title>{% block title %}{%endblock%}</title>
+    <meta name="format-detection" content="telephone=no">
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Montserrat:400,700%7CLato:300,300italic,400,400italic,700italic,800%7CQuicksand:400,700">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+		<!--[if lt IE 10]>
+    <div style="background: #212121; padding: 10px 0; box-shadow: 3px 3px 5px 0 rgba(0,0,0,.3); clear: both; text-align:center; position: relative; z-index:1;"><a href="httpqwertywindows.microsoft.com/en-US/internet-explorer/"><img src="images/ie8-panel/warning_bar_0000_us.jpg" border="0" height="42" width="820" alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today."></a></div>
+    <script src="js/html5shiv.min.js"></script>
+		<![endif]-->
+  </head>
+  <body>
+    <div class="page">
+      <div class="page-loader page-loader-variant-1">
+        <div><a class="brand brand-md brand-inverse" href="index-2.html"><p style="color:white">Compnay Logo</p><!--img src="images/logo-light-166x42.png" alt="" width="166" height="42"/--></a>
+          <div class="page-loader-body">
+            <div id="spinningSquaresG">
+              <div class="spinningSquaresG" id="spinningSquaresG_1"></div>
+              <div class="spinningSquaresG" id="spinningSquaresG_2"></div>
+              <div class="spinningSquaresG" id="spinningSquaresG_3"></div>
+              <div class="spinningSquaresG" id="spinningSquaresG_4"></div>
+              <div class="spinningSquaresG" id="spinningSquaresG_5"></div>
+              <div class="spinningSquaresG" id="spinningSquaresG_6"></div>
+              <div class="spinningSquaresG" id="spinningSquaresG_7"></div>
+              <div class="spinningSquaresG" id="spinningSquaresG_8"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <header class="page-head">
+        <div class="rd-navbar-wrap">
+          <nav class="rd-navbar rd-navbar-corporate-light" data-layout="rd-navbar-fixed" data-sm-layout="rd-navbar-fixed" data-md-layout="rd-navbar-fixed" data-md-device-layout="rd-navbar-fixed" data-lg-layout="rd-navbar-static" data-lg-device-layout="rd-navbar-static" data-xl-layout="rd-navbar-static" data-xl-device-layout="rd-navbar-static" data-xxl-layout="rd-navbar-static" data-xxl-device-layout="rd-navbar-static" data-lg-stick-up-offset="53px" data-xl-stick-up-offset="53px" data-xxl-stick-up-offset="53px" data-lg-stick-up="true" data-xl-stick-up="true" data-xxl-stick-up="true">
+            
+            <div class="rd-navbar-inner">
+              <div class="rd-navbar-group">
+                <div class="rd-navbar-panel">
+                  <button class="rd-navbar-toggle" data-rd-navbar-toggle=".rd-navbar-nav-wrap"><span></span></button><a class="rd-navbar-brand brand" href="index-2.html"><!--img src="images/logo-166x42.png" alt="" width="166" height="42"/--><p style="color:black; font-size: 20px;">Company Logo</p></a>
+                </div>
+                <div class="rd-navbar-group-asside">
+                  <div class="rd-navbar-nav-wrap">
+                    <div class="rd-navbar-nav-inner">
+                      <ul class="rd-navbar-nav">
+                        <li class="active"><a href="{% url 'main:home'%}">Home</a>
+                        </li>
+                        <li><a href="{% url 'main:about' %}">About us</a>
+                        </li>
+                        <li><a href="#">Referral</a>
+                        </li>
+                        <li><a href="{% url 'main:bot' %}">Xenos Bot</a>
+                        </li>
+                       
+                        <li><a href="{% url 'main:faq'%}">FAQ</a>
+                        </li>
+                        
+                        <!--li><a href="services.html">News</a>
+                        </li-->
+                        
+                        <li><a href="#">Apply</a>
+                          <ul class="rd-navbar-dropdown">
+                            <li><a href="{% url 'main:developer' %}">Work as A Developer</a>
+                            </li>
+                            <li><a href="{%url 'main:trader'%}">Trade</a>
+                            </li>
+                            <li><a href="{%url 'main:tech' %}">Work As Tech Support</a>
+                            </li>
+                            
+                          </ul>
+                        </li>
+                       
+                        <li><a href="{% url 'main:contact' %}">Contact us</a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                
+                </div>
+              </div>
+            </div>
+          </nav>
+        </div>
+      </header>
+
+
+      {%block content %}
+      {% endblock %}
+
+
+
+      <footer class="page-foot bg-ebony-clay context-dark">
+        
+        <div class="container">
+          <hr>
+        </div>
+        <div class="page-foot section section-35 bg-ebony-clay context-dark">
+          <div class="container text-center wow fadeInUp" data-wow-delay="0s">
+            <div class="row row-15 flex-row-md-reverse justify-content-md-between align-items-md-center">
+              <div class="col-md-6 text-md-right">
+                <div class="group-sm group-middle">
+                  <p class="font-italic text-white">Follow Us:</p>
+                  <ul class="list-inline list-inline-reset">
+                    <li><a class="icon icon-round icon-pciked-bluewood icon-xxs-smallest fa fa-facebook" href="#"></a></li>
+                    <li><a class="icon icon-round icon-pciked-bluewood icon-xxs-smallest fa fa-twitter" href="#"></a></li>
+                    <li><a class="icon icon-round icon-pciked-bluewood icon-xxs-smallest fa fa-google-plus" href="#"></a></li>
+                  </ul>
+                </div>
+              </div>
+              <div class="col-md-6 text-md-left">
+                <p class="rights text-white"><span class="copyright-year"></span><span>&nbsp;&#169;&nbsp;</span><span>Xenos Bot.&nbsp;</span></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
+
+    </div>
+    <div class="snackbars" id="form-output-global"></div>
+    <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="pswp__bg"></div>
+      <div class="pswp__scroll-wrap">
+        <div class="pswp__container">
+          <div class="pswp__item"></div>
+          <div class="pswp__item"></div>
+          <div class="pswp__item"></div>
+        </div>
+        <div class="pswp__ui pswp__ui--hidden">
+          <div class="pswp__top-bar">
+            <div class="pswp__counter"></div>
+            <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+            <button class="pswp__button pswp__button--share" title="Share"></button>
+            <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+            <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+            <div class="pswp__preloader">
+              <div class="pswp__preloader__icn">
+                <div class="pswp__preloader__cut">
+                  <div class="pswp__preloader__donut"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+            <div class="pswp__share-tooltip"></div>
+          </div>
+          <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button>
+          <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button>
+          <div class="pswp__caption">
+            <div class="pswp__caption__cent"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="{% static 'js/core.min.js' %}"></script>
+    <script src="{% static 'js/script.js' %}"></script>
+  
+  
+
+  <!--LIVEDEMO_00 -->
+
+  <script type="text/javascript">
+   var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-7078796-5']);
+    _gaq.push(['_trackPageview']);
+    (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();</script>
+    
+
+  
+  </body>
+
+<!-- Mirrored from static.livedemo00.template-help.com/wt_prod-12803/ by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 03 Feb 2018 15:04:19 GMT -->
+</html>
