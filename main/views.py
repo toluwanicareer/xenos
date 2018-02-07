@@ -31,3 +31,4 @@ class TechView(TemplateView):
 
 class TraderView(TemplateView):
 	template_name='main/trader.html'
+
