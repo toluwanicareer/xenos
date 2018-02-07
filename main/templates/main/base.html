@@ -43,7 +43,7 @@
             <div class="rd-navbar-inner">
               <div class="rd-navbar-group">
                 <div class="rd-navbar-panel">
-                  <button class="rd-navbar-toggle" data-rd-navbar-toggle=".rd-navbar-nav-wrap"><span></span></button><a class="rd-navbar-brand brand" href="index-2.html"><!--img src="images/logo-166x42.png" alt="" width="166" height="42"/--><p style="color:black; font-size: 20px;">Company Logo</p></a>
+                  <button class="rd-navbar-toggle" data-rd-navbar-toggle=".rd-navbar-nav-wrap"><span></span></button><a class="rd-navbar-brand brand" href="{% url 'main:home'%}"><!--img src="images/logo-166x42.png" alt="" width="166" height="42"/--><p style="color:black; font-size: 20px;">Company Logo</p></a>
                 </div>
                 <div class="rd-navbar-group-asside">
                   <div class="rd-navbar-nav-wrap">
@@ -53,7 +53,15 @@
                         </li>
                         <li><a href="{% url 'main:about' %}">About us</a>
                         </li>
-                        <li><a href="#">Referral</a>
+                        <li><a href="#">Updates</a>
+                          <ul class="rd-navbar-dropdown">
+                            <li><a href="#">News</a>
+                            </li>
+                            <li><a href="#">Roadmap</a>
+                            </li>
+                            
+                            
+                          </ul>
                         </li>
                         <li><a href="{% url 'main:bot' %}">Xenos Bot</a>
                         </li>
@@ -78,6 +86,20 @@
                        
                         <li><a href="{% url 'main:contact' %}">Contact us</a>
                         </li>
+                        {% if user.is_authenticated %}
+                        <li><a href="#" style="color:#b00; font-size: 10px;">{{user.email}}</a>
+                          <ul class="rd-navbar-dropdown">
+                            <li><a href="/account/logout/">Logout</a>
+                            </li>
+                          </ul>
+                        </li>
+                        
+                        {% else %}
+                        <li><a href="/account/login/">Login</a>
+                        </li>
+                        {% endif %}
+                        
+                        
                       </ul>
                     </div>
                   </div>

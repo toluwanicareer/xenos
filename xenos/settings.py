@@ -25,7 +25,9 @@ SECRET_KEY = '25yq%t7r_739hj3q@c!&ov$sw+19)2z-v*9g0s*v7%joczh_e('
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+'tolucareer.pythonanywhere.com',
+]
 
 
 # Application definition
@@ -123,7 +125,7 @@ USE_TZ = True
 ACCOUNT_EMAIL_UNIQUE = True
 ACCOUNT_EMAIL_CONFIRMATION_REQUIRED = False
 
-ACCOUNT_EMAIL_CONFIRMATION_EMAIL=False
+#ACCOUNT_EMAIL_CONFIRMATION_EMAIL=False
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
