@@ -19,23 +19,7 @@
 		<![endif]-->
   </head>
   <body>
-    <!--div class="page">
-      <div class="page-loader page-loader-variant-1">
-        <div><a class="brand brand-md brand-inverse" href="index-2.html"><p style="color:white">Compnay Logo</p><!--img src="images/logo-light-166x42.png" alt="" width="166" height="42"/--></a>
-          <!--div class="page-loader-body">
-            <div id="spinningSquaresG">
-              <div class="spinningSquaresG" id="spinningSquaresG_1"></div>
-              <div class="spinningSquaresG" id="spinningSquaresG_2"></div>
-              <div class="spinningSquaresG" id="spinningSquaresG_3"></div>
-              <div class="spinningSquaresG" id="spinningSquaresG_4"></div>
-              <div class="spinningSquaresG" id="spinningSquaresG_5"></div>
-              <div class="spinningSquaresG" id="spinningSquaresG_6"></div>
-              <div class="spinningSquaresG" id="spinningSquaresG_7"></div>
-              <div class="spinningSquaresG" id="spinningSquaresG_8"></div>
-            </div>
-          </div>
-        </div>
-      </div-->
+    
       <header class="page-head">
         <div class="rd-navbar-wrap">
           <nav class="rd-navbar rd-navbar-corporate-light" data-layout="rd-navbar-fixed" data-sm-layout="rd-navbar-fixed" data-md-layout="rd-navbar-fixed" data-md-device-layout="rd-navbar-fixed" data-lg-layout="rd-navbar-static" data-lg-device-layout="rd-navbar-static" data-xl-layout="rd-navbar-static" data-xl-device-layout="rd-navbar-static" data-xxl-layout="rd-navbar-static" data-xxl-device-layout="rd-navbar-static" data-lg-stick-up-offset="53px" data-xl-stick-up-offset="53px" data-xxl-stick-up-offset="53px" data-lg-stick-up="true" data-xl-stick-up="true" data-xxl-stick-up="true">
@@ -87,7 +71,7 @@
                         <li><a href="{% url 'main:contact' %}">Contact us</a>
                         </li>
                         {% if user.is_authenticated %}
-                        <li><a href="#" style="color:#b00; font-size: 10px;">{{user.email}}</a>
+                        <li><a href="#" style="color:#b00; font-size: 10px;">{{user.username}}</a>
                           <ul class="rd-navbar-dropdown">
                             <li><a href="/account/logout/">Logout</a>
                             </li>

@@ -27,6 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
 'tolucareer.pythonanywhere.com',
+'localhost',
 ]
 
 
@@ -125,7 +126,7 @@ USE_TZ = True
 ACCOUNT_EMAIL_UNIQUE = True
 ACCOUNT_EMAIL_CONFIRMATION_REQUIRED = False
 
-#ACCOUNT_EMAIL_CONFIRMATION_EMAIL=False
+ACCOUNT_EMAIL_CONFIRMATION_EMAIL=False
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 

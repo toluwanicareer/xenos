@@ -15,11 +15,16 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
+from acc import views
+from django.views.static import serve
+from django.conf import settings
  
 
 app_name='xenos'
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'', include('main.urls')),
+    url(r"^account/login/$", views.LoginView.as_view(), name="login"),
     url(r"^account/", include("account.urls")),
+    url(r'^media/(?P<path>.*)', serve, {'document_root': settings.MEDIA_ROOT}),
 ]
