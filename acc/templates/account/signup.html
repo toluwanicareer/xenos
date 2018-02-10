@@ -20,22 +20,7 @@
   </head>
   <body class="one-screen-page bg-gray-darker bg-image" style="background-image: url(images/bg-register.jpg);">
     <div class="page">
-      <!--div class="page-loader page-loader-variant-1">
-        <div><a class="brand brand-md brand-inverse" href="index-2.html"><img src="images/logo-light-166x42.png" alt="" width="166" height="42"/></a>
-          <div class="page-loader-body">
-            <div id="spinningSquaresG">
-              <div class="spinningSquaresG" id="spinningSquaresG_1"></div>
-              <div class="spinningSquaresG" id="spinningSquaresG_2"></div>
-              <div class="spinningSquaresG" id="spinningSquaresG_3"></div>
-              <div class="spinningSquaresG" id="spinningSquaresG_4"></div>
-              <div class="spinningSquaresG" id="spinningSquaresG_5"></div>
-              <div class="spinningSquaresG" id="spinningSquaresG_6"></div>
-              <div class="spinningSquaresG" id="spinningSquaresG_7"></div>
-              <div class="spinningSquaresG" id="spinningSquaresG_8"></div>
-            </div>
-          </div>
-        </div>
-      </div-->
+     
       <section class="section section-single novi-background bg-gray-darker novi-background" style="background-image: url(https://livedemo00.template-help.com/wt_prod-12803/images/bg-register.jpg);">
         <div class="section-single-inner">
           <header class="section-single-header">
@@ -47,29 +32,37 @@
             <div class="container">
               <div class="row justify-content-md-center">
                 <div class="col-md-7 col-lg-5 col-xl-4">
+                  {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-{{message.tags}} alert-dismissable">
+                  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                  <strong>{{message}}</strong>
+                </div>
+                {%endfor%}
+              {% endif %}
                   <div class="block-shadow text-center">
                     <div class="block-inner">
                       <p class="text-uppercase text-bold text-dark">Create your account</p><span class="novi-icon icon icon-xl icon-black block-icon material-icons-face"></span>
                     </div>
-                    <form class="rd-mailform form-modern form-darker" data-form-output="form-output-global" data-form-type="contact" method="post" action="/account/signup/">
+                    <form class=" form-modern form-darker" data-form-output="form-output-global" data-form-type="contact" method="post" action="/account/signup/">
                     	  	{% csrf_token %}
                     	<input type="hidden" name="code" id="id_hidden">
                       <div class="block-inner">
                         <div class="form-wrap">
-                          <input class="form-input" id="id_username" type="text" name="username"  data-constraints="@Required">
-                          <label class="form-label" for="register-form-name">Username</label>
+                          <input class="form-input" placeholder="Username" id="id_username" type="text" name="username"  data-constraints="@Required">
+                          
                         </div>
                         <div class="form-wrap">
-                          <input class="form-input" id="id_email" type="email" name="email" data-constraints="@Email @Required">
-                          <label class="form-label" for="register-form-email">Email</label>
+                          <input class="form-input" id="id_email" placeholder="Email" type="email" name="email" data-constraints="@Email @Required">
+                          
                         </div>
                         <div class="form-wrap">
-                          <input class="form-input" id="id_password" type="password" name="password" data-constraints="@Required">
-                          <label class="form-label" for="register-form-password">Password</label>
+                          <input class="form-input" id="id_password" placeholder="Password" type="password" name="password" data-constraints="@Required">
+                          
                         </div>
                         <div class="form-wrap">
-                          <input class="form-input" id="rid_password_confirm" type="password" name="password_confirm" data-constraints="@Required">
-                          <label class="form-label" for="register-form-password-confirm">Repeat a password</label>
+                          <input class="form-input" placeholder="Confirm Password" id="rid_password_confirm" type="password" name="password_confirm" data-constraints="@Required">
+                          
                         </div>
                         <!--div class="form-wrap text-left text-secondary">
                           <label class="checkbox-inline checkbox-small">

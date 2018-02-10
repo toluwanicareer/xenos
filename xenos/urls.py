@@ -24,7 +24,10 @@ app_name='xenos'
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'', include('main.urls')),
+    url(r'office/', include('xenos_admin.urls')),
     url(r"^account/login/$", views.LoginView.as_view(), name="login"),
+    url(r"^account/logout/$", views.LogoutView.as_view(), name="logout"),
+    url(r"^account/signup/$", views.SignupView.as_view(), name="signup"),
     url(r"^account/", include("account.urls")),
     url(r'^media/(?P<path>.*)', serve, {'document_root': settings.MEDIA_ROOT}),
 ]

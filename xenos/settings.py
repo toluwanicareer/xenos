@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'main',
     "account",
     "acc",
+    'xenos_admin',
     "django.contrib.sites",
 ]
 
@@ -137,7 +138,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 LOGIN_REDIRECT_URL = '/'
 SITE_ID = 1 
-
+ACCOUNT_LOGIN_REDIRECT_URL='/'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
