@@ -6,7 +6,7 @@ from django.views.generic import (TemplateView,ListView,
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
 from .models import Plan, Investment, Percentage
-from payeer.api import payeer_api
+
 from payeer.constants import CURRENCY_USD
 import random, string
 import pdb
