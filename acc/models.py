@@ -12,7 +12,7 @@ class Profile(models.Model):
 	user = models.OneToOneField(User, related_name="profile", on_delete=models.CASCADE)
 	passport=models.ImageField(null=True)
 	phone=models.CharField(null=True, max_length=200)
-	wallet=models.IntegerField(null=True)
+	wallet=models.IntegerField(null=True, default=0)
 
 
 

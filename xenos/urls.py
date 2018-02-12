@@ -18,6 +18,10 @@ from django.contrib import admin
 from acc import views
 from django.views.static import serve
 from django.conf import settings
+from django.views.generic import (TemplateView,ListView,
+                                  DetailView,CreateView,
+                                  UpdateView,DeleteView,
+                                  FormView)
  
 
 app_name='xenos'
@@ -30,4 +34,9 @@ urlpatterns = [
     url(r"^account/signup/$", views.SignupView.as_view(), name="signup"),
     url(r"^account/", include("account.urls")),
     url(r'^media/(?P<path>.*)', serve, {'document_root': settings.MEDIA_ROOT}),
+    
+    url(r'^payeer_489343022.txt', (TemplateView.as_view(
+    template_name="payeer_489343022.txt",
+    content_type='application/text',
+)), name='payeer_489343022.txt'),
 ]

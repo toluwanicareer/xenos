@@ -111,6 +111,12 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+PAYEER = {
+    'ACCOUNT': 'P88094316',
+    'API_ID': '12345',
+    'API_PASS': 'qwerty',
+    'LANGUAGE': 'en' # optional, default: 'ru'
+}
 # Internationalization
 # https://docs.djangoproject.com/en/1.10/topics/i18n/
 

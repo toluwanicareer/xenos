@@ -1,0 +1,197 @@
+{% extends 'xenos_admin/base.html' %}
+{% block content %}
+
+	<div class="btn-box-row row-fluid">
+        <a href="#" class="btn-box big span4"><i class=" icon-random"></i><b>$ 0.00</b>
+            <p class="text-muted">
+                Balance</p>
+        </a><a href="#" class="btn-box big span4"><i class="icon-user"></i><b>$ 0.00</b>
+            <p class="text-muted">
+                Total Invested</p>
+        </a><a href="#" class="btn-box big span4"><i class="icon-money"></i><b>$ 0.00</b>
+            <p class="text-muted">
+                Total Earned</p>
+        </a>
+    </div>
+	<div class="control-group">
+		<label class="control-label" for="basicinput">Select Plan</label>
+		<div class="controls">
+			 {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-{{message.tags}} alert-dismissable">
+                  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                  <strong>{{message}}</strong>
+                </div>
+                {%endfor%}
+              {% endif %}
+			<form action="{% url 'office:invest' %}" method="GET">
+
+				<select onchange="this.form.submit()" tabindex="1" value="{% if plan %}{{plan.name}}{%else%}Plan{% endif %}" name="plan" data-placeholder="Select here.." class="span8">
+					<option value="">Plans</option>
+					<option value="Basic">Basic Plan</option>
+					<option value="Advance">Advance</option>
+					<option value="Vip">Vip</option>
+				</select>
+			</form>
+		</div>
+	</div>
+	<p>
+		<strong>Percentage Today</strong>
+	</p>
+	<table class="table table-striped">
+	  <thead>
+		<tr>
+		  <th>Plan</th>
+		  <th>Percentage</th>
+		</tr>
+	  </thead>
+	  <tbody>
+	  	{% for per in percentage %}
+		<tr>
+		  
+		  <td>{{per.plan.name}}</td>
+		  <td>{{per.percentage}}</td>
+		  
+		</tr>
+		
+		{% endfor %}
+		
+	  </tbody>
+	</table>
+
+	<br />
+	<!-- <hr /> -->
+	<br />
+
+	<p>
+		<strong>Investment</strong>
+	</p>
+	<table class="table table-striped">
+	  <thead>
+		<tr>
+		  
+		  <th>Type</th>
+		  <th>Amount</th>
+		  <th>Date</th>
+		  <th>Profit</th>
+		</tr>
+	  </thead>
+	  <tbody>
+	  	{% for invest in investment %}
+		<tr>
+		  
+		  <td>{{invest.plan.name}}</td>
+		  <td>{{invest.amount}}</td>
+		  <td>{{invest.date}}</td>
+		  <td>{{invest.profit}}</td>
+		</tr>
+		{% endfor %}
+		
+	  </tbody>
+	</table>
+
+	<br />
+	<!-- <hr /> -->
+	<br />
+
+	{% if plan %}
+	<div class="invest">
+		<!--a href="" class="span8 btn btn-info">Pay with Perfect Money</a><br>
+		<a href="" class="span8 btn btn-warning">Pay with Coin Payment</a><br-->
+	</div>
+	<div class="planinfo">
+
+		<h3 id="name">{{plan.name}}</h3>
+		<p><strong>Investment</strong> : &nbsp; &nbsp; &nbsp;${{plan.minimum}} - {{plan.maximum}} </p>
+		<p><strong>Interest</strong> :&nbsp; &nbsp; &nbsp;{{plan.interest}} </p>
+		<p><strong>Days</strong> : &nbsp; &nbsp; &nbsp;{{plan.days}} </p>
+		<a href="#" class="span5 btn btn-danger" data-toggle="modal" data-target="#paymentmodal">Pay </a>
+	</div>
+
+	
+	
+	{% endif %}
+
+	
+
+	<div class="modal fade" id="paymentmodal">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title">Enter amount to invest  </h5>
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+		      </div>
+		      <div class="modal-body">
+		        <div class="control-group">
+					<label class="control-label" for="basicinput">Amount In dollar($) </label>
+					<h3>Plan : {{plan.name}}</h3>
+					<h3>Min : {{plan.minimum}}</h3>
+					<h3>Max : {{plan.maximum}}</h3>
+					<div class="controls">
+						<input type="number" id="amount" placeholder="Type something here..." style="width:100%">
+						
+					</div>
+				</div>
+
+
+		      </div>
+		      <div class="modal-footer">
+		      	
+		        <a href="#" id="payeer" class="btn btn-danger">Pay with Coinbase</a>
+		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+		      </div>
+		    </div>
+		  </div>
+	</div>
+
+	
+	</br>
+	
+
+
+
+
+{% endblock %}
+
+{% block scripts %}
+	<script>
+	$('#payeer').click(function(event) {
+		
+    event.preventDefault();
+    plan=$('#name').text()
+   	amount=$('#amount').val();
+   
+   	if  (amount){
+   			a=checkplan(plan,amount)
+   			if (a){
+   		window.location="{% url 'office:pay'%}?method=coinbase&amount="+amount+"&plan="+plan;
+   	}
+   	}
+   	
+   	
+
+});
+
+	function checkplan(plan, value){
+		if (plan == 'Basic'){
+			if(value <= 1000 && value >= 50){
+				console.log('im here');
+				return true;
+			}
+		}
+		if (plan == 'Advance'){
+			if(value <= 5000 && value >= 1010){
+				return true;
+			}
+		}
+		if (plan == 'Vip'){
+			if(value <= 5010 && value >= 100000){
+				return true;
+			}
+		}
+
+	}
+</script>
+{% endblock %}
