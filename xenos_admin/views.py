@@ -7,7 +7,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
 from .models import Plan, Investment, Percentage
 
-from payeer.constants import CURRENCY_USD
+
 import random, string
 import pdb
 from django.contrib.auth.models import User
