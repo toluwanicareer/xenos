@@ -1694,3 +1694,45 @@ filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff5f5f5', end
 	border-radius: 0 0 3px 0
 }
 @media(max-width:767px){body{padding:0!important}.wrapper{padding:20px 15px}}
+
+.todayrate{
+  margin-top: 50px;
+  margin-left: 0px;
+}
+
+.btn-danger{
+	margin-left: 0px;
+}
+
+.planinfo, .firstinfo{
+	background:#fff;
+	padding:50px;
+	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+
+}
+
+.planinfo h3 {
+    border-bottom: 1px solid #d6d6d6;
+    padding-bottom: 5px;
+    width: 98.7%;
+    font-weight: 900;
+    font-size: 1.563em;
+    line-height: 1.240em;
+    color: #b00;
+    font-family: 'Fira Sans', sans-serif;
+    margin-bottom: 0px;
+    
+}
+
+.planinfo hr{
+
+    border: 2px solid #b00;
+    margin: 0px;
+    margin-bottom: 20px;
+    width: 100px;
+
+}
+
+body{
+	font-family: 'Fira Sans', sans-serif;
+}

@@ -2,19 +2,28 @@
 {% block content %}
 
 	<div class="btn-box-row row-fluid">
-        <a href="#" class="btn-box big span4"><i class=" icon-random"></i><b>$ 0.00</b>
+        <a href="#" class="planinfo btn-box big span4"><b>$ 1000.00</b>
             <p class="text-muted">
-                Balance</p>
-        </a><a href="#" class="btn-box big span4"><i class="icon-user"></i><b>$ 0.00</b>
-            <p class="text-muted">
-                Total Invested</p>
-        </a><a href="#" class="btn-box big span4"><i class="icon-money"></i><b>$ 0.00</b>
+               Total Invested</p>
+        </a><a href="#" class="planinfo btn-box big span4"></i><b>$ 600.00</b>
             <p class="text-muted">
                 Total Earned</p>
+        </a><a href="#" class="planinfo btn-box big span4"></i><b>$ 0.00</b>
+            <p class="text-muted">
+                Total Withdrawn</p>
         </a>
     </div>
-	<div class="control-group">
-		<label class="control-label" for="basicinput">Select Plan</label>
+    {% if link %}
+    <div class="planinfo control-group span4" style="padding:35px">
+
+		<h4>Please click on this link to complete payment: <a href="{{link}}" target="_blank">click here</a></h4>
+				<h4 style="color:green">Or use this bitcoin address: {{address}}</h4>
+	</div>
+	{% endif %}
+
+	<div class="control-group planinfo span3">
+		<h3>Please Select Plan to Invest</h3>
+		<hr>
 		<div class="controls">
 			 {% if messages %}
                 {% for message in messages %}
@@ -26,7 +35,7 @@
               {% endif %}
 			<form action="{% url 'office:invest' %}" method="GET">
 
-				<select onchange="this.form.submit()" tabindex="1" value="{% if plan %}{{plan.name}}{%else%}Plan{% endif %}" name="plan" data-placeholder="Select here.." class="span8">
+				<select onchange="this.form.submit()" tabindex="1" value="{% if plan %}{{plan.name}}{%else%}Plan{% endif %}" name="plan" data-placeholder="Select here.." class="">
 					<option value="">Plans</option>
 					<option value="Basic">Basic Plan</option>
 					<option value="Advance">Advance</option>
@@ -35,9 +44,25 @@
 			</form>
 		</div>
 	</div>
-	<p>
-		<strong>Percentage Today</strong>
-	</p>
+	{% if plan %}
+	
+	<div class="planinfo control-group span3" >
+
+		<h3 id="name">{{plan.name}}</h3>
+		<hr>
+		<p><strong>Investment</strong> : &nbsp; &nbsp; &nbsp;${{plan.minimum}} - {{plan.maximum}} </p>
+		<p><strong>Interest</strong> :&nbsp; &nbsp; &nbsp;{{plan.interest}} </p>
+		<p><strong>Days</strong> : &nbsp; &nbsp; &nbsp;{{plan.days}} </p>
+		<a href="#" class=" btn btn-danger" data-toggle="modal" data-target="#paymentmodal">Pay </a>
+	</div>
+
+	
+	
+	{% endif %}
+	<div class="planinfo span2">
+		<h3>Today's Rate </h3>
+		<hr>
+	
 	<table class="table table-striped">
 	  <thead>
 		<tr>
@@ -58,14 +83,13 @@
 		
 	  </tbody>
 	</table>
+</div>
 
-	<br />
-	<!-- <hr /> -->
-	<br />
+	
 
-	<p>
-		<strong>Investment</strong>
-	</p>
+	<div class="planinfo span4">
+		<h3>Active Investment </h3>
+		<hr>
 	<table class="table table-striped">
 	  <thead>
 		<tr>
@@ -74,6 +98,8 @@
 		  <th>Amount</th>
 		  <th>Date</th>
 		  <th>Profit</th>
+		  <th>Status</th>
+		  
 		</tr>
 	  </thead>
 	  <tbody>
@@ -84,37 +110,23 @@
 		  <td>{{invest.amount}}</td>
 		  <td>{{invest.date}}</td>
 		  <td>{{invest.profit}}</td>
+		  <td class="{{invest.status}}">{{invest.status}}</td>
 		</tr>
 		{% endfor %}
 		
 	  </tbody>
 	</table>
+</div>
 
 	<br />
 	<!-- <hr /> -->
 	<br />
 
-	{% if plan %}
-	<div class="invest">
-		<!--a href="" class="span8 btn btn-info">Pay with Perfect Money</a><br>
-		<a href="" class="span8 btn btn-warning">Pay with Coin Payment</a><br-->
-	</div>
-	<div class="planinfo">
-
-		<h3 id="name">{{plan.name}}</h3>
-		<p><strong>Investment</strong> : &nbsp; &nbsp; &nbsp;${{plan.minimum}} - {{plan.maximum}} </p>
-		<p><strong>Interest</strong> :&nbsp; &nbsp; &nbsp;{{plan.interest}} </p>
-		<p><strong>Days</strong> : &nbsp; &nbsp; &nbsp;{{plan.days}} </p>
-		<a href="#" class="span5 btn btn-danger" data-toggle="modal" data-target="#paymentmodal">Pay </a>
-	</div>
-
 	
-	
-	{% endif %}
 
 	
 
-	<div class="modal fade" id="paymentmodal">
+	<div class="modal fade planinfo" id="paymentmodal">
 		  <div class="modal-dialog" role="document">
 		    <div class="modal-content">
 		      <div class="modal-header">
@@ -123,9 +135,9 @@
 		          <span aria-hidden="true">&times;</span>
 		        </button>
 		      </div>
-		      <div class="modal-body">
+		      <div class="modal-body ">
 		        <div class="control-group">
-					<label class="control-label" for="basicinput">Amount In dollar($) </label>
+					<h4>Amount In dollar($) </h4>
 					<h3>Plan : {{plan.name}}</h3>
 					<h3>Min : {{plan.minimum}}</h3>
 					<h3>Max : {{plan.maximum}}</h3>
@@ -139,7 +151,7 @@
 		      </div>
 		      <div class="modal-footer">
 		      	
-		        <a href="#" id="payeer" class="btn btn-danger">Pay with Coinbase</a>
+		        <a href="#" id="payeer" class="btn btn-danger">Pay with Bitcoin</a>
 		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 		      </div>
 		    </div>
@@ -164,8 +176,11 @@
    	amount=$('#amount').val();
    
    	if  (amount){
+
    			a=checkplan(plan,amount)
+   			
    			if (a){
+   				console.log(a)
    		window.location="{% url 'office:pay'%}?method=coinbase&amount="+amount+"&plan="+plan;
    	}
    	}
@@ -186,7 +201,7 @@
 				return true;
 			}
 		}
-		if (plan == 'Vip'){
+		if (plan == 'Vip' ){
 			if(value <= 5010 && value >= 100000){
 				return true;
 			}
