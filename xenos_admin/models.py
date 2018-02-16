@@ -21,9 +21,11 @@ class Investment(models.Model):
 	plan=models.ForeignKey(Plan)
 	profit=models.IntegerField(default=0)
 	date=models.DateTimeField(auto_now_add=True, null=False)
-	status=models.BooleanField(default=False)
 	last_updated=models.DateTimeField(null=True, default=datetime.now())
-
+	status=models.CharField(null=True,max_length=200, default='Pending', choices=(('Pending', 'Pending'),('Active', 'Active'), ('Completed', 'Completed')))
+	reinvest=models.BooleanField(default=True)
+	bitaddress=models.CharField(max_length=200, null=True)
+	link=models.URLField(null=True)
 	def add_profit(self):
 		now=timezone.now()
 		day=now-self.last_updated

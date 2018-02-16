@@ -15,6 +15,8 @@ from django.contrib import messages
 from django.http import  HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from acc.models import Profile
+from coinbase.wallet.client import Client
+import random
 
 
 # Create your views here.
@@ -38,17 +40,22 @@ class Invest(LoginRequiredMixin, View):
 
 
 class pay(LoginRequiredMixin, View):
-
+	bitcoin_addresses=['15E6G39yb3proGjF6xbZK8BUmwErXMYweA','1FCCRDHhs4xdJSrNLNSx6WVNw3BvJFmhoK','1BhSCT8cAqmXa74YAQBvV7BLvxwqED6UY']
+	link='https://blockchain.info/payment_request?address=1FCCRDHhs4xdJSrNLNSx6WVNw3BvJFmhoK&amount=100&message=for%20greatness'
 	def get(self, *args, **kwargs):
+		investment=Investment.objects.filter(user=self.request.user)
 		payment_method=self.request.GET.get('method')
 		amount=self.request.GET.get('amount')
 		plan=self.request.GET.get('plan')
+		address=random.choice(self.bitcoin_addresses)
+		link='https://blockchain.info/payment_request?address='+address+'&amount='+amount+'&message=Plan: '+plan+' source : Xenos'
 		plan=Plan.objects.get(name__icontains=plan)
-		order_id=id_generator()
-		Investment.objects.create(user=self.request.user,amount=int(amount), plan=plan).save()
-		messages.success(self.request, 'Payment successful. Investment Created')
-		return HttpResponseRedirect(reverse('office:invest'))
-        
+		Investment.objects.create(amount=amount, reinvest=True, user=self.request.user,plan=plan, bitaddress=address,link=link, status='Pending')
+		context={'link':link, 'address':address}
+		context['percentage']=Percentage.objects.all()
+		context['investment']=investment
+		return render(self.request,'xenos_admin/invest.html', context)
+		
 
 def id_generator(size=12, chars=string.ascii_uppercase + string.digits):
 	return ''.join(random.choice(chars) for _ in range(size))
