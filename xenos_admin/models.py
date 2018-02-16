@@ -29,11 +29,21 @@ class Investment(models.Model):
 	def add_profit(self):
 		now=timezone.now()
 		day=now-self.last_updated
-		if day.days >= 1:
-			percentage=Percentage.objects.get(plan=self.plan).percentage
-			self.profit+=(percentage*self.amount)
-			self.last_updated=now
-			self.save()
+		payt_day=now-self.date
+		if self.status=='Active':
+			if day.days >= 1:
+				percentage=Percentage.objects.get(plan=self.plan).percentage
+				self.profit+=(percentage*self.amount)
+				self.last_updated=now
+				self.save()
+		elif self.status=='Pending'	:
+			if payt_day.days >=1:
+				self.delete()
+				
+
+			
+
+
 
 class Percentage(models.Model):
 	plan=models.ForeignKey(Plan)

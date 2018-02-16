@@ -8,7 +8,7 @@ class Command(BaseCommand):
 	help ='Check the Invetsment, and update necessary Investment daily'
 
 	def handle(self, *args, **options):
-		for investment in Investment.objects.filter(status=True):
+		for investment in Investment.objects.all():
 			investment.add_profit()
 
 

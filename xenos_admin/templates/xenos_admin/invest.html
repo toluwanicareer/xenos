@@ -13,19 +13,7 @@
                 Total Withdrawn</p>
         </a>
     </div>
-    {% if link %}
-    <div class="planinfo control-group span4" style="padding:35px">
-
-		<h4>Please click on this link to complete payment: <a href="{{link}}" target="_blank">click here</a></h4>
-				<h4 style="color:green">Or use this bitcoin address: {{address}}</h4>
-	</div>
-	{% endif %}
-
-	<div class="control-group planinfo span3">
-		<h3>Please Select Plan to Invest</h3>
-		<hr>
-		<div class="controls">
-			 {% if messages %}
+     {% if messages %}
                 {% for message in messages %}
                 <div class="alert alert-{{message.tags}} alert-dismissable">
                   <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
@@ -33,6 +21,20 @@
                 </div>
                 {%endfor%}
               {% endif %}
+    {% if request.session.link %}
+    <div class="planinfo control-group span4" style="padding:35px">
+
+		<h4>Please click on this link to complete payment: <a href="{{request.session.link}}" target="_blank">click here</a></h4>
+				<h4 style="color:green">Or use this bitcoin address: {{request.session.address}}</h4>
+				<strong style="font-size: 20px;">BTC: {{request.session.btc_value}}   Dollar: ${{request.session.amount}}</strong>
+	</div>
+	{% endif %}
+
+	<div class="control-group planinfo span3">
+		<h3>Please Select Plan to Invest</h3>
+		<hr>
+		<div class="controls">
+			
 			<form action="{% url 'office:invest' %}" method="GET">
 
 				<select onchange="this.form.submit()" tabindex="1" value="{% if plan %}{{plan.name}}{%else%}Plan{% endif %}" name="plan" data-placeholder="Select here.." class="">

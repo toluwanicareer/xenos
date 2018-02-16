@@ -33,6 +33,15 @@ class SignupView(account.views.SignupView):
 		messages.warning(self.request, 'Username or email already exist')
 		return super(SignupView,self).form_invalid(form)
 
+	def form_valid(self, form):
+		a=super(SignupView, self).form_valid(form)
+		messages.success(self.request, 'Account Created. Please wait, until your account is Verified. You will be verified via email . Thank you ')
+		self.created_user.is_active = False
+		self.created_user.save()
+		return HttpResponseRedirect(reverse('signup'))
+
+		
+
 			
 
 

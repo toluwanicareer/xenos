@@ -1696,7 +1696,7 @@ filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff5f5f5', end
 @media(max-width:767px){body{padding:0!important}.wrapper{padding:20px 15px}}
 
 .todayrate{
-  margin-top: 50px;
+
   margin-left: 0px;
 }
 
@@ -1708,6 +1708,8 @@ filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff5f5f5', end
 	background:#fff;
 	padding:50px;
 	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+	margin-bottom:70px;
+
 
 }
 
