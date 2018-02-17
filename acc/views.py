@@ -16,7 +16,8 @@ class LoginView(account.views.LoginView):
 		return super(LoginView,self).form_invalid(form)
 
 	def form_valid(self,form):
-		return super(LoginView,self).form_valid(form)	
+		super(LoginView,self).form_valid(form)
+		return HttpResponseRedirect(reverse('office:invest'))
 
 class LogoutView(account.views.LogoutView):
 
