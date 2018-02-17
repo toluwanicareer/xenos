@@ -124,6 +124,8 @@ class notif_handler(LoginRequiredMixin, View):
 	def post(self,*args, **kwargs):
 		notif_type=self.request.POST.get('type')
 		test_model.objects.create(justin='yeah',data='ok yeah')
+		return HttpResponse(status=200)
+		'''
 		if notif_type=='wallet:addresses:new-payment':
 			data=self.request.POST.get('data')
 			address=data.address
@@ -132,7 +134,7 @@ class notif_handler(LoginRequiredMixin, View):
 			investment.save()
 
 			return HttpResponse(status=200)
-
+		'''
 
 
 
