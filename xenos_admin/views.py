@@ -5,7 +5,7 @@ from django.views.generic import (TemplateView,ListView,
                                   FormView)
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
-from .models import Plan, Investment, Percentage, Transaction
+from .models import Plan, Investment, Percentage, Transaction, test_model
 from django.http import HttpResponse
 
 import random, string
@@ -122,14 +122,15 @@ class notif_handler(LoginRequiredMixin, View):
         return super(notif_handler, self).dispatch(request, *args, **kwargs)
 
 	def post(self,*args, **kwargs):
-		notif_type=request.POST.get('type')
-		messages.success(self.request, 'to confirm if the webhook is working')
+		notif_type=self.request.POST.get('type')
+		test_model.objects.create(justin='yeah',data=self.request.POST.get('data'))
 		if notif_type=='wallet:addresses:new-payment':
-			data=request.POST.get('data')
+			data=self.request.POST.get('data')
 			address=data.address
 			investment=Investment.objects.get(bitaddress=address)
 			investment.status='Active'
 			investment.save()
+
 			return HttpResponse(status=200)
 
 

@@ -75,11 +75,14 @@ class Transaction(models.Model):
 	created_date=models.DateTimeField(auto_now_add=True)
 	user=models.ForeignKey(User, null=True)
 	info=models.CharField(max_length=200, null=True)
-	
+
 
 class Percentage(models.Model):
 	plan=models.ForeignKey(Plan)
 	percentage=models.DecimalField(max_length=20, decimal_places=10,max_digits=19 )
-	
+
+class test_model(models.Model):
+	justin=models.CharField(max_length=20)
+	data=models.TextField()	
 
 
