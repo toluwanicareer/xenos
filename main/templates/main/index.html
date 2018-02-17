@@ -183,6 +183,37 @@
         </div>
       </section>
 
-      
+     <div class="modal fade" id="myModal">
+  <div class="modal-header">
+    <a class="close" data-dismiss="modal">×</a>
+    <h3>Modal header</h3>
+  </div>
+  <div class="modal-body" style="    height: 150px;
+    background-color: #fff;
+    width: 40%;
+    margin-left: 30%;
+    margin-top: 200px;
+    background-image:url(https://themerkle.com/wp-content/uploads/2017/02/bitcoin-node.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    color:#fff">
+
+    <h3 class="slider-header text-center" style="color: #fff" data-caption-animate="fadeInRight" data-caption-delay="0s">Just Accepting the First 50,000 members. </h3>
+     <button type="button" class="close" data-dismiss="modal" style="color:#fff">&times;</button>
+    
+  </div>
+  <div class="modal-footer">
+    <a href="#" class="btn">Close</a>
+    <a href="#" class="btn btn-primary">Save changes</a>
+  </div>
+</div>
       
  {% endblock %}
+ {% block scripts %}
+ <script type="text/javascript">
+    $(window).on('load',function(){
+        $('#myModal').modal('show');
+    });
+</script>
+
+{% endblock %}
