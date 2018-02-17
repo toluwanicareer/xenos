@@ -6,6 +6,7 @@ from django.views.generic import (TemplateView,ListView,
                                   UpdateView,DeleteView,
                                   FormView)
 
+from xenos_admin.models import Post
 
 
 class Home(TemplateView):
@@ -31,4 +32,11 @@ class TechView(TemplateView):
 
 class TraderView(TemplateView):
 	template_name='main/trader.html'
+
+class UpdateView(ListView):
+	model=Post
+	template_name='main/update.html'
+	queryset=Post.objects.all().order_by('-created_date')
+	context_object_name = 'posts'
+
 

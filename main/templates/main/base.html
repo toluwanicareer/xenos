@@ -37,16 +37,11 @@
                         </li>
                         <li><a href="{% url 'main:about' %}">About us</a>
                         </li>
-                        <li><a href="#">Updates</a>
-                          <ul class="rd-navbar-dropdown">
-                            <li><a href="#">News</a>
-                            </li>
-                            <li><a href="#">Roadmap</a>
-                            </li>
+                        <li><a href="{% url 'main:update' %}">Updates</a></li>
+                          
                             
                             
-                          </ul>
-                        </li>
+                         
                         <li><a href="{% url 'main:bot' %}">Xenos Bot</a>
                         </li>
                        
@@ -56,7 +51,7 @@
                         <!--li><a href="services.html">News</a>
                         </li-->
                         
-                        <li><a href="#">Apply</a>
+                        <!--li><a href="#">Apply</a>
                           <ul class="rd-navbar-dropdown">
                             <li><a href="{% url 'main:developer' %}">Work as A Developer</a>
                             </li>
@@ -66,7 +61,7 @@
                             </li>
                             
                           </ul>
-                        </li>
+                        </li-->
                        
                         <li><a href="{% url 'main:contact' %}">Contact us</a>
                         </li>
@@ -74,6 +69,8 @@
                         <li><a href="#" style="color:#b00; font-size: 10px;">{{user.username}}</a>
                           <ul class="rd-navbar-dropdown">
                             <li><a href="/account/logout/">Logout</a>
+                            </li>
+                            <li><a href="{% url 'office:invest' %}">Admin</a>
                             </li>
                           </ul>
                         </li>

@@ -14,6 +14,7 @@ class Profile(models.Model):
 	phone=models.CharField(null=True, max_length=200)
 	wallet=models.DecimalField(max_length=20, decimal_places=10,max_digits=19, null=True )
 	referer=models.CharField(max_length=200, null=True)
+	id_image=models.ImageField(null=True)
 
 
 

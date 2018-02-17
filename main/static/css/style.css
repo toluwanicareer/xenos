@@ -28892,6 +28892,8 @@ img.mfp-img {
   overflow: auto; }
 
 
-.todayrate{
-  margin-top: 50px;
+.postcard{
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+    margin-bottom: 30px;
+  padding:20px;
 }

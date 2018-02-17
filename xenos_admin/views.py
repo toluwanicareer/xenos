@@ -22,6 +22,7 @@ from coinbase.wallet.client import Client
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.clickjacking import xframe_options_exempt
 from django.utils.decorators import method_decorator
+from .forms import UserForm, ProfileForm, PostForm
 
 
 
@@ -135,6 +136,28 @@ class notif_handler(LoginRequiredMixin, View):
 
 			return HttpResponse(status=200)
 		'''
+
+
+class ProfileUpdateView(LoginRequiredMixin, View):
+	login_url='account/login'
+	def get(self, request, *args, **kwargs):
+		userform=UserForm(instance=self.request.user)
+		profile=Profile.objects.get(user=self.request.user)
+		profileform=ProfileForm(instance=profile)
+		context={'user':request.user, 'userform':userform, 'profileform':profileform}
+		return render(self.request, 'xenos_admin/profile.html',context)
+
+	def post(self, request, *args, **kwargs):
+		try:
+			userform=UserForm(data=self.request.POST, instance=self.request.user)
+			profile=Profile.objects.get(user=self.request.user)
+			profileform=ProfileForm(data=self.request.POST, instance=profile, files=request.FILES)
+			userform.save()
+			profileform.save()
+		except:
+			messages.warning(request,'Invalid form input, please try again or send email to hello@dailynaija.com')
+		messages.success(request, 'Profile Updated Successfully')
+		return HttpResponseRedirect(reverse('office:invest'))
 
 
 

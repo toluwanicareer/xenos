@@ -1,0 +1,47 @@
+{% extends 'xenos_admin/base.html' %}
+{% block content %}
+
+<div class="span4 planinfo">
+	<form method="post" enctype="multipart/form-data">
+      {%csrf_token %}
+        <div class="row mb-20">
+          <div class="col-md-4">
+            <label>First Name</label>
+            {{userform.first_name}}
+          </div>
+          <div class="col-md-4">
+            <label>Last Name</label>
+            {{userform.last_name}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-8 mb-20">
+            <label>Email</label>
+           {{userform.email}}
+          </div>
+          <div class="clearfix"></div>
+          <div class="col-md-8 mb-20">
+            <label>Username</label>
+            {{userform.username}}
+          </div>
+          <div class="clearfix"></div>
+          <div class="col-md-8 mb-20">
+            <label>Mobile No</label>
+            {{profileform.phone}}
+          </div>
+          <div class="col-md-8 mb-20">
+            <label>Picture</label>
+            {{profileform.passport}}
+          </div>
+          <div class="col-md-8 mb-20">
+            <label>ID</label>
+            {{profileform.id_image}}
+          </div>
+
+          <div class="col-md-12">
+            <button class="btn btn-primary" type="submit"><i class="fa fa-fw fa-lg fa-check-circle"></i> Save</button>
+          </div>
+	</div>
+</form>
+
+{% endblock %}

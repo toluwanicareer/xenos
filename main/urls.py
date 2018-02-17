@@ -12,4 +12,5 @@ urlpatterns = [
     url(r'^developer/$',views.DeveloperView.as_view(), name='developer'),
     url(r'^technical-assistant/$',views.TechView.as_view(), name='tech'),
     url(r'^apply-trader/$',views.TraderView.as_view(), name='trader'),
+     url(r'^xenos_update/$',views.UpdateView.as_view(), name='update'),
     ]
