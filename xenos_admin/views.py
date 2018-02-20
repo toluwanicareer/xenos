@@ -114,7 +114,7 @@ class Withdraw(LoginRequiredMixin, View):
 
 
 
-class notif_handler(LoginRequiredMixin, View):
+class notif_handler(View):
 
 
     @method_decorator(csrf_exempt)
