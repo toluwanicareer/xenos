@@ -55,7 +55,8 @@
 			
 			<form action="{% url 'office:withdraw' %}" method="POST">
 				{% csrf_token %}
-				<input type="number" name="amount" required id="amount" placeholder="Type something here..." style="width:100%">
+				<input type="number" name="amount" required id="amount" placeholder="Enter the address to receive the money" style="width:100%">
+				<input type="number" name="bitaddress" required id="bitaddress" placeholder="Enter Amount" style="width:100%">
 				<button class="btn btn-danger" type="submit">Submit Withdrawal Request</button> 
 			</form>
 		</div>

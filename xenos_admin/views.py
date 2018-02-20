@@ -102,8 +102,11 @@ class pay(LoginRequiredMixin, View):
 class Withdraw(LoginRequiredMixin, View):
 
 	def post(self, *args, **kwargs):
+		client = Client('qLfg5C9hhnEWL9tt',
+                'qMwSqeIiDqeLCitIFnUjitX5EcGVgghF')
 		amount=self.request.POST.get('amount')
 		wallet=self.request.user.profile.wallet
+		address=self.request.POST.get('bitaddress')
 		if int(amount) < wallet:
 			messages.warning(self.request, 'Cant withdraw more than your wallet amount')
 			return HttpResponseRedirect(reverse('office:invest'))
