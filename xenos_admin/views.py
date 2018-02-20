@@ -140,7 +140,7 @@ class notif_handler(View):
 @csrf_exempt
 def notify_handler(request):
 	if request.method=='POST':
-		test_model.objects.create(justin='yeah',data='ok yeah')
+		test_model.objects.create(justin='yeah',data=request.POST)
 		return HttpResponse(status=200)
 
 
