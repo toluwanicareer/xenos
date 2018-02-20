@@ -118,7 +118,6 @@ class notif_handler(View):
 
 
     @method_decorator(csrf_exempt)
-    @method_decorator(xframe_options_exempt)
     def dispatch(self, request, *args, **kwargs):
         return super(notif_handler, self).dispatch(request, *args, **kwargs)
 
