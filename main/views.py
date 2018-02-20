@@ -7,6 +7,9 @@ from django.views.generic import (TemplateView,ListView,
                                   FormView)
 
 from xenos_admin.models import Post
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponse
 
 
 class Home(TemplateView):
@@ -38,5 +41,6 @@ class UpdateView(ListView):
 	template_name='main/update.html'
 	queryset=Post.objects.all().order_by('-created_date')
 	context_object_name = 'posts'
+
 
 

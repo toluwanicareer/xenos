@@ -112,20 +112,22 @@ class Withdraw(LoginRequiredMixin, View):
 			messages.success(self.request, 'Withdrawal Request Made. We will get back to you')
 			return HttpResponseRedirect(reverse('office:invest'))	
 
-
+'''
 
 class notif_handler(View):
 
-
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
+    	pdb.set_trace()
         return super(notif_handler, self).dispatch(request, *args, **kwargs)
 
-	def post(self,*args, **kwargs):
+	def post(self,request,*args, **kwargs):
 		notif_type=self.request.POST.get('type')
 		test_model.objects.create(justin='yeah',data='ok yeah')
 		return HttpResponse(status=200)
-		'''
+
+
+		
 		if notif_type=='wallet:addresses:new-payment':
 			data=self.request.POST.get('data')
 			address=data.address
@@ -135,6 +137,14 @@ class notif_handler(View):
 
 			return HttpResponse(status=200)
 		'''
+@csrf_exempt
+def notify_handler(request):
+	if request.method=='POST':
+		test_model.objects.create(justin='yeah',data='ok yeah')
+		return HttpResponse(status=200)
+
+
+
 
 
 class ProfileUpdateView(LoginRequiredMixin, View):
