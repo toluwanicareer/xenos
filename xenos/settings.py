@@ -35,6 +35,8 @@ EMAIL_USE_TLS = True
 ALLOWED_HOSTS = [
 'tolucareer.pythonanywhere.com',
 'localhost',
+'xenostrading.co',
+'www.xenostrading.co',
 ]
 
 
