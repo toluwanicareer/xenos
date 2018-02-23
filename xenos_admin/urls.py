@@ -10,5 +10,5 @@ urlpatterns = [
     url(r'^withdraw/$', views.Withdraw.as_view(), name='withdraw'),
      url(r'^coinbase_notify/$', views.notify_handler, name='notify'),
      url(r'^profile/$', views.ProfileUpdateView.as_view(), name='profile'),
-    
+   	url(r'^xenos_pay/$', views.bot_pay.as_view(), name="xenos_pay")
     ]

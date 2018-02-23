@@ -44,7 +44,7 @@
                     <div class="block-inner">
                       <p class="text-uppercase text-bold text-dark">Create your account</p><span class="novi-icon icon icon-xl icon-black block-icon material-icons-face"></span>
                     </div>
-                    <form class=" form-modern form-darker" data-form-output="form-output-global" data-form-type="contact" method="post" action="/account/signup/">
+                    <form class=" form-modern form-darker" data-form-output="form-output-global" data-form-type="contact" method="post" action="/account/signup/" enctype="multipart/form-data">
                     	  	{% csrf_token %}
                     	<input type="hidden" name="code" id="id_hidden">
                       <div class="block-inner">
@@ -62,6 +62,11 @@
                         </div>
                         <div class="form-wrap">
                           <input class="form-input" placeholder="Confirm Password" id="rid_password_confirm" type="password" name="password_confirm" data-constraints="@Required">
+                          
+                        </div>
+                        <div class="form-wrap">
+                          <label style="color:#b00">Passport</label>
+                          <input class="form-input"  id="id_passport" type="file" name="passport" data-constraints="@Required">
                           
                         </div>
                         <!--div class="form-wrap text-left text-secondary">

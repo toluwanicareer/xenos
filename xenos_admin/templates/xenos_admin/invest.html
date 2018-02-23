@@ -24,12 +24,21 @@
     {% if link %}
     <div class="planinfo control-group span8" style="padding:35px">
 
-		<h4>Please click on this link to complete payment: <a href="{{link}}" target="_blank">click here</a></h4>
+		<h4>Please click on this link to complete payment for investment: <a href="{{link}}" target="_blank">click here</a></h4>
 				<h4 style="color:green">Or use this bitcoin address: {{btc_address}}</h4>
 				<strong style="font-size: 20px;">BTC: {{btc_value}}   Dollar: ${{amount}}</strong>
 	</div>
 	{% endif %}
 
+
+{% if xenos_link %}
+    <div class="planinfo control-group span8" style="padding:35px">
+
+		<h4>Please click on this link to complete payment for bot purchase: <a href="{{xenos_link}}" target="_blank">click here</a></h4>
+				<h4 style="color:green">Or use this bitcoin address: {{xenos_btc_address}}</h4>
+				<strong style="font-size: 20px;">BTC: {{xenos_btc_value}}   Dollar: ${{xenos_amount}}</strong>
+	</div>
+	{% endif %}
 	<div class="control-group planinfo span3">
 		<h3>Please Select Plan to Invest</h3>
 		<hr>
@@ -47,6 +56,25 @@
 		</div>
 	</div>
 
+	<div class="control-group planinfo span3">
+		<h3>Purchase Xenos Bot</h3>
+		<hr>
+		<div class="controls">
+			
+			<form action="{% url 'office:xenos_pay' %}" method="POST">
+				{% csrf_token %}
+
+				
+				{{form.bot}}
+				<button class="btn btn-danger" type="submit">Submit Withdrawal Request</button> 
+					
+
+				
+				
+			</form>
+		</div>
+	</div>
+
 
 	<div class="control-group planinfo span3">
 		<h3>Withdraw  </h3>
@@ -55,8 +83,8 @@
 			
 			<form action="{% url 'office:withdraw' %}" method="POST">
 				{% csrf_token %}
-				<input type="number" name="amount" required id="amount" placeholder="Enter the address to receive the money" style="width:100%">
-				<input type="number" name="bitaddress" required id="bitaddress" placeholder="Enter Amount" style="width:100%">
+				<input type="number" name="amount" required id="amount" placeholder="Enter Amount" style="width:100%">
+				<input type="number" name="bitaddress" required id="bitaddress" placeholder="Enter Wallet address to receive the money" style="width:100%">
 				<button class="btn btn-danger" type="submit">Submit Withdrawal Request</button> 
 			</form>
 		</div>
