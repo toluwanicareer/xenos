@@ -25,13 +25,6 @@ SECRET_KEY = '25yq%t7r_739hj3q@c!&ov$sw+19)2z-v*9g0s*v7%joczh_e('
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-EMAIL_HOST = 'smtp.sendgrid.net'
-EMAIL_PORT = 587
-EMAIL_HOST_USER = 'dailynaija'
-EMAIL_HOST_PASSWORD = 'mamadu69#'
-EMAIL_USE_TLS = True
-
-
 ALLOWED_HOSTS = [
 'tolucareer.pythonanywhere.com',
 'localhost',
