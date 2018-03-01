@@ -1,4 +1,4 @@
 from django.contrib import admin
-from .models import CompanyDigits 
+from .models import CompanyDigit
 # Register your models here.
-admin.site.register(CompanyDigits)
+admin.site.register(CompanyDigit)
