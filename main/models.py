@@ -8,3 +8,5 @@ class CompanyDigits(models.Model):
 	capi=models.CharField(max_length=200)
 	withd=models.CharField(max_length=200)
 	depo=models.CharField(max_length=200)
+
+	#hfhfddg
