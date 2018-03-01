@@ -29,7 +29,7 @@ class Home(TemplateView):
 		context['depo']=digits.depo
 		context['capi']=digits.capi
 		return context
-
+#hhf
 
 class AboutView(TemplateView):
 	template_name='main/about.html'
