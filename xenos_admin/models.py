@@ -90,3 +90,9 @@ class Post(models.Model):
 	text=models.TextField()
 	created_date=models.DateTimeField(auto_now_add=True)
 
+
+class Xenos(models.Model):
+	package_name=models.CharField(max_length=200)
+	cost=models.IntegerField()
+
+
