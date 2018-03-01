@@ -53,10 +53,10 @@ class SignupView(account.views.SignupView):
 			subject='User Registration on Xenos'
 			message=' A user with email ' + self.created_user.email + ' just registered on xenos. Please Login Activate'
 			email2=EmailMessage(subject, message,'contact@xenos.com', to=['abiodun.toluwanii@gmail.com'], reply_to=['no-reply@avetiz.com'],)
-			#try:
-			email2.send()
-			#except:
-				#messages.warning(self.request, 'Network error, Admin was not notified of you registration, Please contact admin directly with your registration email')
+			try:
+				email2.send()
+			except:
+				messages.warning(self.request, 'Network error, Admin was not notified of you registration, Please contact admin directly with your registration email')
 		else:
 			pass
 		
