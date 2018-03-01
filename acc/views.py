@@ -51,8 +51,8 @@ class SignupView(account.views.SignupView):
 		if form.is_valid():
 			form.save()
 			subject='User Registration on Xenos'
-			message=' A user with email ' + created_user.email + ' just registered on xenos. Please Login Activate'
-			email2=EmailMessage(subject, message,'contact@xenos.com', to=['xeotrading@gmail.com'], reply_to=['no-reply@avetiz.com'],)
+			message=' A user with email ' + self.created_user.email + ' just registered on xenos. Please Login Activate'
+			email2=EmailMessage(subject, message,'contact@xenos.com', to=['abiodun.toluwanii@gmail.com'], reply_to=['no-reply@avetiz.com'],)
 			try:
 				email2.send()
 			except:
