@@ -91,6 +91,7 @@ class Post(models.Model):
 	created_date=models.DateTimeField(auto_now_add=True)
 
 
+
 class xenos_bot(models.Model):
 	plan_name=models.CharField(max_length=200)
 	price=models.IntegerField()

@@ -195,6 +195,11 @@ class ProfileUpdateView(LoginRequiredMixin, View):
 		return HttpResponseRedirect(reverse('office:invest'))
 
 
+class xenos_bot(View):
+	def get(self,request, *args, **kwargs):
+		render(self.request, 'xenos_admin/xenos_bot',{})
+
+
 
 def id_generator(size=12, chars=string.ascii_uppercase + string.digits):
 	return ''.join(random.choice(chars) for _ in range(size))
