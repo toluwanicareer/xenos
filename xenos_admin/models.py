@@ -91,12 +91,7 @@ class Post(models.Model):
 	created_date=models.DateTimeField(auto_now_add=True)
 
 
-<<<<<<< HEAD
-class Xenos(models.Model):
-	package_name=models.CharField(max_length=200)
-	cost=models.IntegerField()
 
-=======
 class xenos_bot(models.Model):
 	plan_name=models.CharField(max_length=200)
 	price=models.IntegerField()
@@ -113,5 +108,4 @@ class xenos_payment(models.Model):
 
 	def __str__(self):
 		return self.bot.plan_name
->>>>>>> dd29b0c6617f6704b02c83f64a827355ef8533e8
 
