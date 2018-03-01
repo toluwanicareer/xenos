@@ -1,97 +1,51 @@
 {% extends 'main/base.html' %}
-{%  block title %}Apply as Tech Assistant-Xenos {% endblock %}
+{%  block title %}Apply as a Software Developer-Xenos {% endblock %}
 
 {% block content %}
-
 
       <section class="section-60 section-md-90">
         <div class="container">
           <div class="row">
             <div class="col-lg-9 col-xl-7">
+              {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-{{message.tags}} alert-dismissable">
+                  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                  <strong>{{message}}</strong>
+                </div>
+                {%endfor%}
+              {% endif %}
               <h3>Apply As a Tech Support</h3>
               <p>we will contact you as soon as we can 
 You will have to go through a phone interview before getting accepted 
 </p>
-              <form class="rd-mailform form-modern" data-form-output="form-output-global" data-form-type="order" method="post" action="http://static.livedemo00.template-help.com/wt_prod-12803/bat/rd-mailform.php">
+              <form class=" form-modern" method="post" action="{% url 'main:tech' %}" enctype="multipart/form-data">
+                {% csrf_token %}
                 <div class="row row-seven row-30">
                   <div class="col-md-3">
                     <div class="form-wrap">
-                      <input class="form-input" id="appointment-name" type="text" name="name" data-constraints="@Required">
-                      <label class="form-label" for="appointment-name">First Name</label>
+                      <input class="form-input" placeholder="Firstname" id="appointment-name" type="text" name="firstname" data-constraints="@Required">
+                      
                     </div>
                   </div>
 
                   <div class="col-md-3">
                     <div class="form-wrap">
-                      <input class="form-input" id="appointment-name" type="text" name="name" data-constraints="@Required">
-                      <label class="form-label" for="appointment-name">Last Name</label>
+                      <input class="form-input" placeholder="lastname" id="appointment-name" name="lastname" type="text" data-constraints="@Required">
+                      
                     </div>
                   </div>
                   <div class="col-md-4">
                     <div class="form-wrap">
-                      <input class="form-input"  type="email" name="email" data-constraints="@Email @Required">
-                      <label class="form-label" for="appointment-email">Email</label>
+                      <input class="form-input" placeholder="email" type="email" name="email" data-constraints="@Email @Required">
+                      
                     </div>
                   </div>
+                  
                   <div class="col-md-3">
                     <div class="form-wrap">
-                      <input class="form-input"  type="text" name="date" data-constraints="@Required" data-time-picker="date">
-                      <label class="form-label" for="appointment-date">Phone Number</label>
-                    </div>
-                  </div>
-                  <div class="col-md-3">
-                    <div class="form-wrap">
-                      <input class="form-input"  type="text" name="date" data-constraints="@Required" data-time-picker="date">
-                      <label class="form-label" for="appointment-date">Country</label>
-                    </div>
-                  </div>
-                  <div class="col-md-4">
-                    <div class="form-wrap">
-                      <input class="form-input"  type="text" name="date" data-constraints="@Required" data-time-picker="date">
-                      <label class="form-label" for="appointment-date">State</label>
-                    </div>
-                  </div>
-                   <div class="col-md-4">
-                    <div class="form-wrap">
-                      <input class="form-input"  type="text" name="date" data-constraints="@Required" data-time-picker="date">
-                      <label class="form-label" for="appointment-date">Zip</label>
-                    </div>
-                  </div>
-                   <div class="col-md-3">
-                    <div class="form-wrap">
-                      <input class="form-input"  type="text" name="date" data-constraints="@Required" data-time-picker="date">
-                      <label class="form-label" for="appointment-date">City</label>
-                    </div>
-                  </div>
-                  <div class="col-md-3">
-                    <div class="form-wrap">
-                      <input class="form-input"  type="text" name="date" data-constraints="@Required" data-time-picker="date">
-                      <label class="form-label" for="appointment-date">Years Of Experience</label>
-                    </div>
-                  </div>
-
-                 
-                  <!--div class="col-md-4">
-                    <div class="form-wrap">
-                      <input class="form-input" id="appointment-time" type="text" name="time" data-constraints="@Required" data-time-picker="time">
-                      <label class="form-label" for="appointment-time">Country</label>
-                    </div>
-                  </div-->
-                  <div class="col-sm-7">
-                    <div class="form-wrap">
-                      <div class="textarea-lined-wrap">
-                        <textarea class="form-input" id="appointment-message" name="message" data-constraints="@Required"></textarea>
-                        <label class="form-label" for="appointment-message">Skill</label>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="col-sm-7">
-                    <div class="form-wrap">
-                      <div class="textarea-lined-wrap">
-                        <textarea class="form-input" id="appointment-message" name="message" data-constraints="@Required"></textarea>
-                        <label class="form-label" for="appointment-message">What will you add to the team</label>
-                      </div>
+                      <h5>CV Upload</h5>
+                      <input class="form-control" name="cv" type="file">
                     </div>
                   </div>
                 </div>
@@ -99,14 +53,13 @@ You will have to go through a phone interview before getting accepted
                   <div class="col-4 col-md-5">
                     <button class="button button-primary button-block" type="submit">Send</button>
                   </div>
-                  <div class="col-3 col-md-2">
-                    <button class="button button-silver-outline button-block" type="reset">Reset</button>
-                  </div>
+                  
                 </div>
               </form>
             </div>
           </div>
         </div>
       </section>
+
 
 {% endblock %}

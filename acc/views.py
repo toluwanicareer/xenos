@@ -6,7 +6,10 @@ from django.contrib import auth, messages
 from django.http import  HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from account.compat import reverse, is_authenticated
+from .models import Profile
+from .forms import ProfileForm
 import pdb
+from django.core.mail import EmailMessage
 # Create your views here.
 
 class LoginView(account.views.LoginView):
@@ -39,6 +42,25 @@ class SignupView(account.views.SignupView):
 		messages.success(self.request, 'Account Created. Please wait, until your account is Verified. You will be verified via email . Thank you ')
 		self.created_user.is_active = False
 		self.created_user.save()
+		try:
+			profile=Profile.objects.get(user=self.created_user)
+		except:
+			pass
+		
+		form=ProfileForm(instance=profile, files=self.request.FILES)
+		if form.is_valid():
+			form.save()
+			subject='User Registration on Xenos'
+			message=' A user with email ' + created_user.email + ' just registered on xenos. Please Login Activate'
+			email2=EmailMessage(subject, message,'contact@xenos.com', to=['xeotrading@gmail.com'], reply_to=['no-reply@avetiz.com'],)
+			try:
+				email2.send()
+			except:
+				message.warning(self.request, 'Network error, Admin was not notified of you registration, Please contact admin directly with your registration email')
+		else:
+			pass
+		
+		#profile.passport=request.POST.get('passport')
 		return HttpResponseRedirect(reverse('signup'))
 
 		

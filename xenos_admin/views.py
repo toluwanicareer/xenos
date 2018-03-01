@@ -5,7 +5,7 @@ from django.views.generic import (TemplateView,ListView,
                                   FormView)
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
-from .models import Plan, Investment, Percentage, Transaction, test_model
+from .models import Plan, Investment, Percentage, Transaction, test_model, xenos_payment
 from django.http import HttpResponse
 
 import random, string
@@ -22,9 +22,9 @@ from coinbase.wallet.client import Client
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.clickjacking import xframe_options_exempt
 from django.utils.decorators import method_decorator
-from .forms import UserForm, ProfileForm, PostForm
-
-
+from .forms import UserForm, ProfileForm, PostForm, XenosForm
+from django.core.mail import EmailMessage
+from django.core.mail import EmailMessage
 
 # Create your views here.
 class Dash(LoginRequiredMixin, TemplateView):
@@ -42,6 +42,7 @@ class Invest(LoginRequiredMixin, View):
 		context['total_investment']=Investment.objects.filter(user=self.request.user).filter(status='Active').aggregate(Sum('amount'))
 		context['pending_transactions']=Transaction.objects.filter(user=self.request.user)
 		context['amt_available_for_withdrwal']=self.request.user.profile.wallet
+		context['form']=XenosForm()
 		try:
 			pending_investment=Investment.objects.get(status='Pending')
 			b = BtcConverter() 
@@ -53,6 +54,19 @@ class Invest(LoginRequiredMixin, View):
 			context['amount']=pending_investment.amount
 		except:
 			pass
+
+		try:
+			pending_xenos_bot_purchase=xenos_payment.objects.get(status='Pending')
+			b = BtcConverter() 
+			btc_value=b.convert_to_btc(int(pending_xenos_bot_purchase.bot.price), 'USD')
+			link='https://blockchain.info/payment_request?address='+pending_xenos_bot_purchase.address+'&amount='+str(btc_value)+'&message=Xenos Purchase '+pending_xenos_bot_purchase.bot.plan_name+' source : Xenos'
+			context['xenos_link']=link
+			context['xenos_btc_address']=pending_investment.bitaddress
+			context['xenos_btc_value']=btc_value
+
+		except:
+			pass
+
 		if self.request.GET.get('plan'):
 			plan=self.request.GET.get('plan')
 			plan=Plan.objects.get(name__icontains=plan)
@@ -62,7 +76,7 @@ class Invest(LoginRequiredMixin, View):
 
 
 class pay(LoginRequiredMixin, View):
-	bitcoin_addresses=['15E6G39yb3proGjF6xbZK8BUmwErXMYweA','1FCCRDHhs4xdJSrNLNSx6WVNw3BvJFmhoK','1BhSCT8cAqmXa74YAQBvV7BLvxwqED6UY']
+	
 	def get(self, *args, **kwargs):
 		investments=Investment.objects.filter(status='Pending')
 		amount=self.request.GET.get('amount')
@@ -99,47 +113,56 @@ class pay(LoginRequiredMixin, View):
 				messages.success(self.request, 'Investment Active')
 				return HttpResponseRedirect(reverse('office:invest'))
 
+class bot_pay(LoginRequiredMixin, View):
+
+	def post(self,request,*args, **kwargs):
+		client = Client('qLfg5C9hhnEWL9tt',
+	                'qMwSqeIiDqeLCitIFnUjitX5EcGVgghF')
+		primary_account = client.get_primary_account()
+		address_data = primary_account.create_address()
+		address=address_data.address
+		form=XenosForm(request.POST)
+		if form.is_valid():
+			xenos_trans=form.save()
+			xenos_trans.bought_user=request.user
+			xenos_trans.address=address
+			xenos_trans.status='Pending'
+			xenos_trans.save()
+		return HttpResponseRedirect(reverse('office:invest'))
+
+
+
+
 class Withdraw(LoginRequiredMixin, View):
 
 	def post(self, *args, **kwargs):
 		client = Client('qLfg5C9hhnEWL9tt',
                 'qMwSqeIiDqeLCitIFnUjitX5EcGVgghF')
+		primary_account = client.primary_account
 		amount=self.request.POST.get('amount')
 		wallet=self.request.user.profile.wallet
 		address=self.request.POST.get('bitaddress')
+		b = BtcConverter() 
+		btc_value=b.convert_to_btc(int(pending_investment.amount), 'USD')
 		if int(amount) < wallet:
 			messages.warning(self.request, 'Cant withdraw more than your wallet amount')
 			return HttpResponseRedirect(reverse('office:invest'))
 		else:
-			Transaction.objects.create(trans_type='Withdrawal', status='Pending', amount=amount, user=self.request.user, info='Withdrawal request')
-			messages.success(self.request, 'Withdrawal Request Made. We will get back to you')
+			try:
+				tx = primary_account.send_money(to=address,
+	                                amount=str(btc_value),
+	                                currency='BTC')
+				messages.success(self.request, 'Transfer Complete. ')
+				Transaction.objects.create(trans_type='Withdrawal', status='Success', amount=amount, user=self.request.user, info='Withdrawal request')
+			except:
+				Transaction.objects.create(trans_type='Withdrawal', status='Pending', amount=amount, user=self.request.user, info='Withdrawal request')
+				messages.warning(self.request, 'Couldnt transefer now, Admin has been contacted to complete transaction manually')
+				message='A withdrawal request was just made on xenos for a total of ' + str(btc_value) + ' to address ' + address + ' by '+ self.request.user.email
+				subject="Withdrwal request on Xenos"
+				mail=EmailMessage(subject, message,'contact@xenos.com', to=['xeotrading@gmail.com'], reply_to=['no-reply@xenos.com'],)
 			return HttpResponseRedirect(reverse('office:invest'))	
 
-'''
 
-class notif_handler(View):
-
-    @method_decorator(csrf_exempt)
-    def dispatch(self, request, *args, **kwargs):
-    	pdb.set_trace()
-        return super(notif_handler, self).dispatch(request, *args, **kwargs)
-
-	def post(self,request,*args, **kwargs):
-		notif_type=self.request.POST.get('type')
-		test_model.objects.create(justin='yeah',data='ok yeah')
-		return HttpResponse(status=200)
-
-
-		
-		if notif_type=='wallet:addresses:new-payment':
-			data=self.request.POST.get('data')
-			address=data.address
-			investment=Investment.objects.get(bitaddress=address)
-			investment.status='Active'
-			investment.save()
-
-			return HttpResponse(status=200)
-		'''
 @csrf_exempt
 def notify_handler(request):
 	if request.method=='POST':

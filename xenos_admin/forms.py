@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from acc.models import Profile
-from .models import Post
+from .models import Post, xenos_payment
 
 class UserForm(forms.ModelForm):
     class Meta:
@@ -31,6 +31,13 @@ class PostForm(forms.ModelForm):
 
         
 
+
+
+
+class XenosForm(forms.ModelForm):
+    class Meta:
+        model=xenos_payment
+        fields=('bot',)
 
 
 

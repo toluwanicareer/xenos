@@ -57,7 +57,7 @@ class Investment(models.Model):
 			referee=User.objects.get(username=referee)
 		except:
 			return True
-		credit_amount=float(referee.profile.wallet)+(0.1*int(self.amount))
+		credit_amount=float(referee.profile.wallet)+(0.05*int(self.amount))
 		referee.profile.wallet=credit_amount
 		Transaction.objects.create(trans_type='Credit', amount=credit_amount, status='Success', user=referee, info='Referall Credit')
 		referee.profile.save()
@@ -91,8 +91,27 @@ class Post(models.Model):
 	created_date=models.DateTimeField(auto_now_add=True)
 
 
+<<<<<<< HEAD
 class Xenos(models.Model):
 	package_name=models.CharField(max_length=200)
 	cost=models.IntegerField()
 
+=======
+class xenos_bot(models.Model):
+	plan_name=models.CharField(max_length=200)
+	price=models.IntegerField()
+
+	def __str__(self):
+		return self.plan_name
+
+class xenos_payment(models.Model):
+	bot=models.ForeignKey(xenos_bot)
+	bought_user=models.ForeignKey(User, null=True)
+	status=models.CharField(max_length=200, null=True, choices=(('Pending', 'Pending'), ('Success', 'Success')))
+	address=models.CharField(max_length=200, null=True)
+	
+
+	def __str__(self):
+		return self.bot.plan_name
+>>>>>>> dd29b0c6617f6704b02c83f64a827355ef8533e8
 

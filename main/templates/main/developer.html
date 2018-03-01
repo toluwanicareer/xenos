@@ -7,11 +7,20 @@
         <div class="container">
           <div class="row">
             <div class="col-lg-9 col-xl-7">
+              {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-{{message.tags}} alert-dismissable">
+                  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                  <strong>{{message}}</strong>
+                </div>
+                {%endfor%}
+              {% endif %}
               <h3>Apply As a Developer</h3>
               <p>we will contact you as soon as we can 
 You will have to go through a phone interview before getting accepted 
 </p>
-              <form class="rd-mailform form-modern" data-form-output="form-output-global" data-form-type="order" method="post" action="http://static.livedemo00.template-help.com/wt_prod-12803/bat/rd-mailform.php">
+              <form class=" form-modern" method="post" action="{% url 'main:developer' %}" enctype="multipart/form-data">
+                {% csrf_token %}
                 <div class="row row-seven row-30">
                   <div class="col-md-3">
                     <div class="form-wrap">
@@ -36,7 +45,7 @@ You will have to go through a phone interview before getting accepted
                   <div class="col-md-3">
                     <div class="form-wrap">
                       <h5>CV Upload</h5>
-                      <input class="form-control" type="file">
+                      <input class="form-control" name="cv" type="file">
                     </div>
                   </div>
                 </div>
