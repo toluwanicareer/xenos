@@ -15,21 +15,21 @@ from django.http import  HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.views import View
 from django.contrib import messages
-from .models import CompanyDigits
+from .models import CompanyDigit
 
 class Home(TemplateView):
 	template_name='main/index.html'
 
 	def get_context_data(self, **kwargs):
 		context=super(Home,self).get_context_data(**kwargs)
-		digits=CompanyDigits.objects.get(id=1)
+		digits=CompanyDigit.objects.get(id=1)
 
 		context['with']=digits.withd
 		context['regi']=digits.reg
 		context['depo']=digits.depo
 		context['capi']=digits.capi
 		return context
-#hhf
+#hhfhd
 
 class AboutView(TemplateView):
 	template_name='main/about.html'
