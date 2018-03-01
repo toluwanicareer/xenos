@@ -56,7 +56,7 @@ class SignupView(account.views.SignupView):
 			try:
 				email2.send()
 			except:
-				message.warning(self.request, 'Network error, Admin was not notified of you registration, Please contact admin directly with your registration email')
+				messages.warning(self.request, 'Network error, Admin was not notified of you registration, Please contact admin directly with your registration email')
 		else:
 			pass
 		
