@@ -82,13 +82,22 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'xenos.wsgi.application'
 
-
+'''
 
 EMAIL_HOST = 'smtp.sendgrid.net'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'dailynaija'
 EMAIL_HOST_PASSWORD = 'MamaDu69#'
 EMAIL_USE_TLS = True
+'''
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'  # During development only
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'myschoolrents@gmail.com'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'myschoolrents@gmail.com'
+EMAIL_HOST_PASSWORD = 'test123321'
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 '''
