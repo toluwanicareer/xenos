@@ -197,7 +197,7 @@ class ProfileUpdateView(LoginRequiredMixin, View):
 
 class xenos_bot(View):
 	def get(self,request, *args, **kwargs):
-		render(self.request, 'xenos_admin/xenos_bot',{})
+		render(self.request, 'xenos_admin/xenos_bot.html',{})
 
 
 
