@@ -38,9 +38,18 @@
                         </li>
                         <li><a href="{% url 'main:about' %}">About us</a>
                         </li>
-                        <li><a href="{% url 'main:update' %}">Updates</a></li>
+                        <!--li><a href="{% url 'main:update' %}">Updates</a></li-->
                           
+                        <li><a href="#">News/Roadmap </a>
+                          <ul class="rd-navbar-dropdown">
+                            <li><a href="{% url 'main:update' %}">Updates</a>
+                            </li>
+                            <li><a href="{%url 'main:roadmap'%}">Roadmap</a>
+                            </li>
                             
+                            
+                          </ul>
+                        </li>    
                             
                          
                         <li><a href="{% url 'main:bot' %}">Xenos Bot</a>

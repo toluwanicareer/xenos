@@ -99,4 +99,7 @@ class UpdateView(ListView):
 	context_object_name = 'posts'
 
 
+class RoadMapView(TemplateView):
+	template_name='main/roadmap.html'
+
 

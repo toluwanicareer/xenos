@@ -32,7 +32,7 @@ class Dash(LoginRequiredMixin, TemplateView):
 	login_url='/account/login'
 
 class Invest(LoginRequiredMixin, View):
-
+	login_url='/account/login/'
 	def get(self, *args, **kwargs):
 		context={}
 		investment=Investment.objects.filter(user=self.request.user)
