@@ -59,11 +59,11 @@ class Invest(LoginRequiredMixin, View):
 			pending_xenos_bot_purchase=xenos_payment.objects.get(status='Pending')
 			b = BtcConverter() 
 			btc_value=b.convert_to_btc(int(pending_xenos_bot_purchase.bot.price), 'USD')
-			link='https://blockchain.info/payment_request?address='+pending_xenos_bot_purchase.address+'&amount='+str(btc_value)+'&message=Xenos Purchase '+pending_xenos_bot_purchase.bot.plan_name+' source : Xenos'
+			link='https://blockchain.info/payment_request?address='+pending_xenos_bot_purchase.address+'&amount='+ format(btc_value, '.8f') + '&message=Xenos Purchase '+pending_xenos_bot_purchase.bot.plan_name+' source : Xenos'
 			context['xenos_link']=link
-			context['xenos_btc_address']=pending_investment.bitaddress
+			context['xenos_btc_address']=pending_xenos_bot_purchase.address
 			context['xenos_btc_value']=btc_value
-
+			
 		except:
 			pass
 
@@ -87,11 +87,17 @@ class pay(LoginRequiredMixin, View):
 			messages.warning(self.request, 'Please complete the payment of the pending investment')
 			return HttpResponseRedirect(reverse('office:invest'))
 		if payment_method=='coinbase':
-			client = Client('qLfg5C9hhnEWL9tt',
-                'qMwSqeIiDqeLCitIFnUjitX5EcGVgghF')
-
-			primary_account = client.get_primary_account()
-			address_data = primary_account.create_address()
+			try:
+				client = Client('qLfg5C9hhnEWL9tt',
+			            'qMwSqeIiDqeLCitIFnUjitX5EcGVgghF')
+			
+				primary_account = client.get_primary_account()
+				address_data = primary_account.create_address()
+			except:
+				messages.warning(self.request, 'Network Error please try again later')
+				return HttpResponseRedirect(reverse('office:invest'))
+			
+            
 			address=address_data.address
 			Investment.objects.create(amount=amount, reinvest=True, user=self.request.user,plan=plan, bitaddress=address, status='Pending')
 			messages.success(self.request, 'Please click on link to make payment through blockchain or use the bitcoin address ')
@@ -136,30 +142,45 @@ class bot_pay(LoginRequiredMixin, View):
 class Withdraw(LoginRequiredMixin, View):
 
 	def post(self, *args, **kwargs):
-		client = Client('qLfg5C9hhnEWL9tt',
-                'qMwSqeIiDqeLCitIFnUjitX5EcGVgghF')
-		primary_account = client.primary_account
+		try:
+			client = Client('qLfg5C9hhnEWL9tt',
+		            'qMwSqeIiDqeLCitIFnUjitX5EcGVgghF')
+		
+			primary_account = client.get_primary_account()
+		except:
+			messages.warning(self.request, 'Network Error please try again later')
+			return HttpResponseRedirect(reverse('office:invest'))
 		amount=self.request.POST.get('amount')
 		wallet=self.request.user.profile.wallet
 		address=self.request.POST.get('bitaddress')
 		b = BtcConverter() 
-		btc_value=b.convert_to_btc(int(pending_investment.amount), 'USD')
-		if int(amount) < wallet:
+		btc_value=b.convert_to_btc(int(amount), 'USD')
+
+		if int(amount) > wallet:
 			messages.warning(self.request, 'Cant withdraw more than your wallet amount')
 			return HttpResponseRedirect(reverse('office:invest'))
 		else:
 			try:
+			
 				tx = primary_account.send_money(to=address,
-	                                amount=str(btc_value),
+	                                amount=format(btc_value, '.8f'),
 	                                currency='BTC')
 				messages.success(self.request, 'Transfer Complete. ')
 				Transaction.objects.create(trans_type='Withdrawal', status='Success', amount=amount, user=self.request.user, info='Withdrawal request')
+				self.request.user.profile.wallet=wallet-amount
+				self.request.user.profile.save()
+				message='A withdrawal was just made on xenos for a total of ' + str(btc_value) + ' to address ' + address + ' by '+ self.request.user.email
+				subject="Withdrawal Completed"
+				mail=EmailMessage(subject, message,'contact@xenos.com', to=['xeotrading@gmail.com'], reply_to=['no-reply@xenos.com'],)
+				
+			
 			except:
 				Transaction.objects.create(trans_type='Withdrawal', status='Pending', amount=amount, user=self.request.user, info='Withdrawal request')
 				messages.warning(self.request, 'Couldnt transefer now, Admin has been contacted to complete transaction manually')
 				message='A withdrawal request was just made on xenos for a total of ' + str(btc_value) + ' to address ' + address + ' by '+ self.request.user.email
 				subject="Withdrwal request on Xenos"
 				mail=EmailMessage(subject, message,'contact@xenos.com', to=['xeotrading@gmail.com'], reply_to=['no-reply@xenos.com'],)
+			
 			return HttpResponseRedirect(reverse('office:invest'))	
 
 
