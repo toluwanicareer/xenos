@@ -40,9 +40,9 @@ class Investment(models.Model):
 		user=self.user
 		if self.status=='Active':
 			if day.days >= 1:
-				self.profit+=(percentage*self.amount*0.01)
+				self.profit+=(percentage*self.amount)#*0.01)
 				self.last_updated=now	
-			if payt_day >= int(plan.days):
+			if payt_day.days >= int(plan.days):
 				self.status=='Completed'
 				user.profile.wallet=self.profit+self.amount+user.profile.wallet
 				user.profile.save()
@@ -80,6 +80,9 @@ class Transaction(models.Model):
 class Percentage(models.Model):
 	plan=models.ForeignKey(Plan)
 	percentage=models.DecimalField(max_length=20, decimal_places=10,max_digits=19 )
+
+	def __str__(self):
+		return self.plan.name
 
 class test_model(models.Model):
 	justin=models.CharField(max_length=20)
