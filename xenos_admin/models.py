@@ -76,10 +76,11 @@ class Transaction(models.Model):
 	created_date=models.DateTimeField(auto_now_add=True)
 	user=models.ForeignKey(User, null=True)
 	info=models.CharField(max_length=200, null=True)
+	'''
 	model_trans=models.CharField(max_length=200, null=True)
 	model_id=models.IntegerField(null=True)
 	bitaddress=models.CharField(null=True, max_length=200)
-
+	'''
 
 class Percentage(models.Model):
 	plan=models.ForeignKey(Plan)
