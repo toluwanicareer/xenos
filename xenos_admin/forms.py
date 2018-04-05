@@ -39,6 +39,7 @@ class XenosForm(forms.ModelForm):
         model=xenos_payment
         fields=('bot',)
 
+        
 
 
         

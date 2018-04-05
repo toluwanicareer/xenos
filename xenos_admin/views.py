@@ -99,7 +99,8 @@ class pay(LoginRequiredMixin, View):
 			
             
 			address=address_data.address
-			Investment.objects.create(amount=amount, reinvest=True, user=self.request.user,plan=plan, bitaddress=address, status='Pending')
+			inv=Investment.objects.create(amount=amount, reinvest=True, user=self.request.user,plan=plan, bitaddress=address, status='Pending')
+			Transaction.objects.create(amount=amount,trans_type='Credit', status='Pending',user=self.request.user,info='Deposit for Investment', bitaddress=address, model_trans='innvestment', model_id=inv.id)
 			messages.success(self.request, 'Please click on link to make payment through blockchain or use the bitcoin address ')
 			
 			return HttpResponseRedirect(reverse('office:invest'))	
@@ -122,19 +123,25 @@ class pay(LoginRequiredMixin, View):
 class bot_pay(LoginRequiredMixin, View):
 
 	def post(self,request,*args, **kwargs):
-		client = Client('qLfg5C9hhnEWL9tt',
-	                'qMwSqeIiDqeLCitIFnUjitX5EcGVgghF')
-		primary_account = client.get_primary_account()
-		address_data = primary_account.create_address()
-		address=address_data.address
-		form=XenosForm(request.POST)
-		if form.is_valid():
-			xenos_trans=form.save()
-			xenos_trans.bought_user=request.user
-			xenos_trans.address=address
-			xenos_trans.status='Pending'
-			xenos_trans.save()
-		return HttpResponseRedirect(reverse('office:invest'))
+		pending_payment=xenos_payment.objects.filter(status='Pending')
+		if not pending_payment.exists():
+			client = Client('qLfg5C9hhnEWL9tt',
+		                'qMwSqeIiDqeLCitIFnUjitX5EcGVgghF')
+			primary_account = client.get_primary_account()
+			address_data = primary_account.create_address()
+			address=address_data.address
+			form=XenosForm(request.POST)
+			if form.is_valid():
+				xenos_trans=form.save()
+				xenos_trans.bought_user=request.user
+				xenos_trans.address=address
+				xenos_trans.status='Pending'
+				xenos_trans.save()
+			return HttpResponseRedirect(reverse('office:invest'))
+		else:
+			messages.warning(request, 'Please complete the payment of your previous bot transaction before creating another one')
+			return HttpResponseRedirect(reverse('office:invest'))
+
 
 
 
@@ -165,6 +172,7 @@ class Withdraw(LoginRequiredMixin, View):
 				tx = primary_account.send_money(to=address,
 	                                amount=format(btc_value, '.8f'),
 	                                currency='BTC')
+
 				messages.success(self.request, 'Transfer Complete. ')
 				Transaction.objects.create(trans_type='Withdrawal', status='Success', amount=amount, user=self.request.user, info='Withdrawal request')
 				self.request.user.profile.wallet=wallet-amount
@@ -187,7 +195,8 @@ class Withdraw(LoginRequiredMixin, View):
 @csrf_exempt
 def notify_handler(request):
 	if request.method=='POST':
-		test_model.objects.create(justin='yeah',data=request.POST)
+		pdb.set_trace()
+		test_model.objects.create(justin='yeah',data=request.body)
 		return HttpResponse(status=200)
 
 

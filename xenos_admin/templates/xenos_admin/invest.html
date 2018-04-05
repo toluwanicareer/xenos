@@ -55,7 +55,21 @@
 			</form>
 		</div>
 	</div>
+	{% if plan %}
+	
+	<div class="planinfo control-group span3" >
 
+		<h3 id="name">{{plan.name}}</h3>
+		<hr>
+		<p><strong>Investment</strong> : &nbsp; &nbsp; &nbsp;${{plan.minimum}} - {{plan.maximum}} </p>
+		<p><strong>Interest</strong> :&nbsp; &nbsp; &nbsp;{{plan.interest}} </p>
+		<p><strong>Days</strong> : &nbsp; &nbsp; &nbsp;{{plan.days}} </p>
+		<a href="#" class=" btn btn-danger" data-toggle="modal" data-target="#paymentmodal">Pay </a>
+	</div>
+
+	
+	
+	{% endif %}
 	<div class="control-group planinfo span3">
 		<h3>Purchase Xenos Bot</h3>
 		<hr>
@@ -66,7 +80,7 @@
 
 				
 				{{form.bot}}
-				<button class="btn btn-danger" type="submit">Submit Withdrawal Request</button> 
+				<button class="btn btn-danger" type="submit">Submit Request to Purchase Wallet</button> 
 					
 
 				
@@ -89,21 +103,7 @@
 			</form>
 		</div>
 	</div>
-	{% if plan %}
-	
-	<div class="planinfo control-group span3" >
 
-		<h3 id="name">{{plan.name}}</h3>
-		<hr>
-		<p><strong>Investment</strong> : &nbsp; &nbsp; &nbsp;${{plan.minimum}} - {{plan.maximum}} </p>
-		<p><strong>Interest</strong> :&nbsp; &nbsp; &nbsp;{{plan.interest}} </p>
-		<p><strong>Days</strong> : &nbsp; &nbsp; &nbsp;{{plan.days}} </p>
-		<a href="#" class=" btn btn-danger" data-toggle="modal" data-target="#paymentmodal">Pay </a>
-	</div>
-
-	
-	
-	{% endif %}
 	<div class="planinfo span6">
 		<h3>Today's Rate </h3>
 		<hr>
