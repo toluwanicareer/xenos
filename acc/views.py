@@ -47,7 +47,7 @@ class SignupView(account.views.SignupView):
 		except:
 			pass
 		
-		form=ProfileForm(instance=profile, files=self.request.FILES)
+		form=ProfileForm(instance=profile, files=self.request.FILES, data=self.request.POST)
 		if form.is_valid():
 			form.save()
 			subject='User Registration on Xenos'
