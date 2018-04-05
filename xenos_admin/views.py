@@ -195,9 +195,19 @@ class Withdraw(LoginRequiredMixin, View):
 @csrf_exempt
 def notify_handler(request):
 	if request.method=='POST':
-		pdb.set_trace()
-		test_model.objects.create(justin='yeah',data=request.body)
-		return HttpResponse(status=200)
+		notification_data=request.body
+		address=notification_data.data.address
+		amount=notification_data.additional_data.amount.amount
+		try:
+			tx=Transaction.objects.get(bitaddress=address)
+			tx.complete(amount)
+		except:
+			pass
+
+
+
+
+
 
 
 

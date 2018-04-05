@@ -2,13 +2,13 @@
 {% block content %}
 
 	<div class="btn-box-row row-fluid">
-        <a href="#" class="planinfo btn-box big span4"><b>$ {{total_invested}}</b>
+        <a href="#" class="planinfo btn-box big span4"><b>$ {{total_invested|default:"0"}}</b>
             <p class="text-muted">
                Total Invested</p>
-        </a><a href="#" class="planinfo btn-box big span4"></i><b>$ {{request.user.wallet}}</b>
+        </a><a href="#" class="planinfo btn-box big span4"></i><b>$ {{request.user.wallet|default:"0"}}</b>
             <p class="text-muted">
                 Total Earned</p>
-        </a><a href="#" class="planinfo btn-box big span4"></i><b>$ {{amt_available_for_withdrwal}}</b>
+        </a><a href="#" class="planinfo btn-box big span4"></i><b>$ {{amt_available_for_withdrwal|default:"0"}}</b>
             <p class="text-muted">
                 Balance</p>
         </a>

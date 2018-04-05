@@ -76,11 +76,18 @@ class Transaction(models.Model):
 	created_date=models.DateTimeField(auto_now_add=True)
 	user=models.ForeignKey(User, null=True)
 	info=models.CharField(max_length=200, null=True)
-	'''
 	model_trans=models.CharField(max_length=200, null=True)
 	model_id=models.IntegerField(null=True)
 	bitaddress=models.CharField(null=True, max_length=200)
-	'''
+	
+
+	def complete(self, amount):
+		'''
+		This function will activate any necessary object that the transaction is tied to.
+		'''
+		c=self.get_tied_object(self.bitaddress, self.model_id)
+	
+
 
 class Percentage(models.Model):
 	plan=models.ForeignKey(Plan)
