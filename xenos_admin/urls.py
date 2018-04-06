@@ -12,7 +12,7 @@ urlpatterns = [
      url(r'^profile/$', views.ProfileUpdateView.as_view(), name='profile'),
 
       url(r'^xenos_bot/$', views.xenos_bot.as_view(), name='xenos_bot'),
-    
+    url(r'invest_pay/$', views.pay_for_investment.as_view(), name='invest_pay'),
 
    	url(r'^xenos_pay/$', views.bot_pay.as_view(), name="xenos_pay")
 

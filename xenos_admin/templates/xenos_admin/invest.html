@@ -2,7 +2,7 @@
 {% block content %}
 
 	<div class="btn-box-row row-fluid">
-        <a href="#" class="planinfo btn-box big span4"><b>$ {{total_invested|default:"0"}}</b>
+        <a href="#" class="planinfo btn-box big span4"><b>$ {{total_investment.amount__sum|default:"0"}}</b>
             <p class="text-muted">
                Total Invested</p>
         </a><a href="#" class="planinfo btn-box big span4"></i><b>$ {{request.user.wallet|default:"0"}}</b>
@@ -55,6 +55,8 @@
 			</form>
 		</div>
 	</div>
+
+
 	{% if plan %}
 	
 	<div class="planinfo control-group span3" >
@@ -100,6 +102,19 @@
 				<input type="number" name="amount" required id="amount" placeholder="Enter Amount" style="width:100%">
 				<input type="text" name="bitaddress" required id="bitaddress" placeholder="Enter Wallet address to receive the money" style="width:100%">
 				<button class="btn btn-danger" type="submit">Submit Withdrawal Request</button> 
+			</form>
+		</div>
+	</div>
+
+	<div class="control-group planinfo span3">
+		<h3>Pay into Wallet  </h3>
+		<hr>
+		<div class="controls">
+			
+			<form action="{% url 'office:pay'%}" method="POST">
+				{% csrf_token %}
+				
+				<button  id="payeer" type="submit"  class="btn btn-danger">Generate Address </button> 
 			</form>
 		</div>
 	</div>
@@ -179,6 +194,7 @@
 		  <th>Amount</th>
 		  <th>Date</th>
 		  <th>Status</th>
+
 		  <th>Info</th>
 		  
 		</tr>
@@ -188,10 +204,11 @@
 		<tr>
 		  
 		  <td>{{transaction.trans_type}}</td>
-		  <td>{{transaction.amount}}</td>
+		  <td>{{transaction.amount|default:"0"}}</td>
 		  <td>{{transaction.created_date}}</td>
 		  <td>{{transaction.status}}</td>
 		  <td>{{transaction.info}}</td>
+
 		  
 		</tr>
 		{% endfor %}
@@ -224,7 +241,11 @@
 					<h3>Min : {{plan.minimum}}</h3>
 					<h3>Max : {{plan.maximum}}</h3>
 					<div class="controls">
-						<input type="number" id="dollar_amount" placeholder="Type something here..." style="width:100%">
+					<form method="post" action="{% url 'office:invest_pay'%}">	
+						{% csrf_token %}
+						<input type="hidden"  name='plan' value="{{plan.name}}">
+						<input type="number" id="dollar_amount" name='amount' placeholder="Type something here..." style="width:100%">
+						
 						
 					</div>
 				</div>
@@ -233,10 +254,12 @@
 		      </div>
 		      <div class="modal-footer">
 		      	
-		        <a href="#" id="payeer" payt_method="coinbase" class="btn btn-danger">Pay Manually with Bitcoin</a>
-		        <a href="#" id="wallet" payt_method="wallet" class="btn btn-danger">Pay from Wallet</a>
+		        
+		        <button type="submit" class="btn btn-primary" >Pay With Wallet</button>
+
 		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 		      </div>
+		  </form>
 		    </div>
 		  </div>
 	</div>
@@ -252,7 +275,7 @@
 
 {% block scripts %}
 	<script>
-	$('#payeer,#wallet').click(function(event) {
+	$('#wallet').click(function(event) {
 		
     event.preventDefault();
     plan=$('#name').text()

@@ -40,32 +40,12 @@ class Invest(LoginRequiredMixin, View):
 		context['investment']=investment
 		context['total_earned']=Investment.objects.filter(user=self.request.user).aggregate(Sum('profit'))
 		context['total_investment']=Investment.objects.filter(user=self.request.user).filter(status='Active').aggregate(Sum('amount'))
-		context['pending_transactions']=Transaction.objects.filter(user=self.request.user)
+		context['pending_transactions']=Transaction.objects.filter(user=self.request.user).order_by('-created_date')[:10]
 		context['amt_available_for_withdrwal']=self.request.user.profile.wallet
 		context['form']=XenosForm()
-		try:
-			pending_investment=Investment.objects.get(status='Pending')
-			b = BtcConverter() 
-			btc_value=b.convert_to_btc(int(pending_investment.amount), 'USD')
-			link='https://blockchain.info/payment_request?address='+pending_investment.bitaddress+'&amount='+str(btc_value)+'&message=Plan: '+pending_investment.plan.name+' source : Xenos'
-			context['link']=link
-			context['btc_address']=pending_investment.bitaddress
-			context['btc_value']=btc_value
-			context['amount']=pending_investment.amount
-		except:
-			pass
-
-		try:
-			pending_xenos_bot_purchase=xenos_payment.objects.get(status='Pending')
-			b = BtcConverter() 
-			btc_value=b.convert_to_btc(int(pending_xenos_bot_purchase.bot.price), 'USD')
-			link='https://blockchain.info/payment_request?address='+pending_xenos_bot_purchase.address+'&amount='+ format(btc_value, '.8f') + '&message=Xenos Purchase '+pending_xenos_bot_purchase.bot.plan_name+' source : Xenos'
-			context['xenos_link']=link
-			context['xenos_btc_address']=pending_xenos_bot_purchase.address
-			context['xenos_btc_value']=btc_value
-			
-		except:
-			pass
+		
+		
+			#link='https://blockchain.info/payment_request?address='+pending_investment.bitaddress+'&amount='+str(btc_value)+'&message=Plan: '+pending_investment.plan.name+' source : Xenos'
 
 		if self.request.GET.get('plan'):
 			plan=self.request.GET.get('plan')
@@ -75,97 +55,75 @@ class Invest(LoginRequiredMixin, View):
 
 
 
-class pay(LoginRequiredMixin, View):
-	
-	def get(self, *args, **kwargs):
-		investments=Investment.objects.filter(status='Pending')
-		amount=self.request.GET.get('amount')
-		plan=self.request.GET.get('plan')
-		payment_method=self.request.GET.get('method')
-		plan=Plan.objects.get(name__icontains=plan)
-		if investments.exists():
-			messages.warning(self.request, 'Please complete the payment of the pending investment')
-			return HttpResponseRedirect(reverse('office:invest'))
-		if payment_method=='coinbase':
-			try:
-				client = Client('qLfg5C9hhnEWL9tt',
-			            'qMwSqeIiDqeLCitIFnUjitX5EcGVgghF')
-			
-				primary_account = client.get_primary_account()
-				address_data = primary_account.create_address()
-			except:
-				messages.warning(self.request, 'Network Error please try again later')
-				return HttpResponseRedirect(reverse('office:invest'))
-			
-            
-			address=address_data.address
-			inv=Investment.objects.create(amount=amount, reinvest=True, user=self.request.user,plan=plan, bitaddress=address, status='Pending')
-			Transaction.objects.create(amount=amount,trans_type='Credit', status='Pending',user=self.request.user,info='Deposit for Investment', bitaddress=address, model_trans='innvestment', model_id=inv.id)
-			messages.success(self.request, 'Please click on link to make payment through blockchain or use the bitcoin address ')
-			
-			return HttpResponseRedirect(reverse('office:invest'))	
-			
-		if payment_method=='wallet':
-			profile=self.request.user.profile
-			balance = int(profile.wallet)
-			if int(amount) > balance:
-				
-				messages.warning(self.request, 'Insufficient balance in wallet')
-				return HttpResponseRedirect(reverse('office:invest'))
-			else:
-				i=Investment.objects.create(amount=amount, reinvest=True, user=self.request.user,plan=plan,  status='Active')	
-				i.pay_referee()
-				profile.wallet=balance-int(amount)
-				profile.save()
-				messages.success(self.request, 'Investment Active')
-				return HttpResponseRedirect(reverse('office:invest'))
+class pay(LoginRequiredMixin,View):
 
+	def post(self, request, *args, **kwargs):
+		
+		address=get_address()
+		if address:
+			Transaction.objects.create(trans_type='Credit', status='Pending',user=self.request.user,info='Deposit for Investment', bitaddress=address)
+			return redirect_to_invest(request,True,'Transaction created successfully, please complete the transaction by paying to the bitcoin address')
+		else:
+			return redirect_to_invest(request,False, 'Network error please try again later' )
+			
+
+
+class pay_for_investment(LoginRequiredMixin, View):
+	def post(self, request, *args, **kwargs):
+		amount=request.POST.get('amount')
+		plan=request.POST.get('plan')
+		plan=get_plan(plan)
+		profile=get_profile(request)
+		balance=get_balance(profile)
+		if int(amount) > balance:
+			return redirect_to_invest(request,False, 'Insufficient balance in wallet' )
+	
+		else:
+			
+			i=Investment.objects.create(amount=amount, reinvest=True, user=self.request.user,plan=plan,  status='Active')	
+			i.pay_referee()
+			round_up_purchase(profile, balance, amount)
+	
+			return redirect_to_invest(request,True,'Investment Active')
+			
+			
 class bot_pay(LoginRequiredMixin, View):
 
 	def post(self,request,*args, **kwargs):
-		pending_payment=xenos_payment.objects.filter(status='Pending')
-		if not pending_payment.exists():
-			client = Client('qLfg5C9hhnEWL9tt',
-		                'qMwSqeIiDqeLCitIFnUjitX5EcGVgghF')
-			primary_account = client.get_primary_account()
-			address_data = primary_account.create_address()
-			address=address_data.address
-			form=XenosForm(request.POST)
-			if form.is_valid():
-				xenos_trans=form.save()
-				xenos_trans.bought_user=request.user
-				xenos_trans.address=address
-				xenos_trans.status='Pending'
+	
+		form=XenosForm(request.POST)
+		if form.is_valid():
+			xenos_trans=form.save(commit=False)
+			xenos_trans.bought_user=request.user
+			amount=xenos_trans.bot.price
+			profile=get_profile(request)
+			balance=get_balance(profile)
+
+			if int(amount) > balance:
+				return redirect_to_invest(request,False, 'Insufficient balance in wallet' )
+			else:
+				xenos_trans.status='Active'
 				xenos_trans.save()
-			return HttpResponseRedirect(reverse('office:invest'))
-		else:
-			messages.warning(request, 'Please complete the payment of your previous bot transaction before creating another one')
-			return HttpResponseRedirect(reverse('office:invest'))
+				round_up_purchase(profile, balance, amount)
 
-
-
-
+				return redirect_to_invest(request,True,'Successful Prchase of Bot')
 
 class Withdraw(LoginRequiredMixin, View):
 
 	def post(self, *args, **kwargs):
-		try:
-			client = Client('qLfg5C9hhnEWL9tt',
-		            'qMwSqeIiDqeLCitIFnUjitX5EcGVgghF')
 		
+		client = get_coinbase_client
+		if client:
 			primary_account = client.get_primary_account()
-		except:
-			messages.warning(self.request, 'Network Error please try again later')
-			return HttpResponseRedirect(reverse('office:invest'))
+		else:
+			return redirect_to_invest(request,False, 'Network error please try again later')
 		amount=self.request.POST.get('amount')
-		wallet=self.request.user.profile.wallet
+		balance=get_balance(get_profile(self.request))
 		address=self.request.POST.get('bitaddress')
-		b = BtcConverter() 
-		btc_value=b.convert_to_btc(int(amount), 'USD')
-
-		if int(amount) > wallet:
-			messages.warning(self.request, 'Cant withdraw more than your wallet amount')
-			return HttpResponseRedirect(reverse('office:invest'))
+		
+		btc_value=convert_to_btc(amount)
+		if int(amount) > balance:
+			return redirect_to_invest(request,False, 'Cant withdraw more than your wallet amount')
 		else:
 			try:
 			
@@ -174,8 +132,7 @@ class Withdraw(LoginRequiredMixin, View):
 	                                currency='BTC')
 
 				messages.success(self.request, 'Transfer Complete. ')
-				Transaction.objects.create(trans_type='Withdrawal', status='Success', amount=amount, user=self.request.user, info='Withdrawal request')
-				self.request.user.profile.wallet=wallet-amount
+				self.request.user.profile.wallet=balance-amount
 				self.request.user.profile.save()
 				message='A withdrawal was just made on xenos for a total of ' + str(btc_value) + ' to address ' + address + ' by '+ self.request.user.email
 				subject="Withdrawal Completed"
@@ -184,12 +141,13 @@ class Withdraw(LoginRequiredMixin, View):
 			
 			except:
 				Transaction.objects.create(trans_type='Withdrawal', status='Pending', amount=amount, user=self.request.user, info='Withdrawal request')
-				messages.warning(self.request, 'Couldnt transefer now, Admin has been contacted to complete transaction manually')
+				
 				message='A withdrawal request was just made on xenos for a total of ' + str(btc_value) + ' to address ' + address + ' by '+ self.request.user.email
 				subject="Withdrwal request on Xenos"
 				mail=EmailMessage(subject, message,'contact@xenos.com', to=['xeotrading@gmail.com'], reply_to=['no-reply@xenos.com'],)
-			
-			return HttpResponseRedirect(reverse('office:invest'))	
+
+			return redirect_to_invest(request,False, 'Couldnt transefer now, Admin has been contacted to complete transaction manually')
+
 
 
 @csrf_exempt
@@ -200,7 +158,10 @@ def notify_handler(request):
 		amount=notification_data.additional_data.amount.amount
 		try:
 			tx=Transaction.objects.get(bitaddress=address)
-			tx.complete(amount)
+			amount=tx.complete(amount)
+			profile=get_profile(request)
+			balance=get_balance(profile)
+			credit_account(profile, balance, amount)
 		except:
 			pass
 
@@ -243,3 +204,69 @@ class xenos_bot(View):
 
 def id_generator(size=12, chars=string.ascii_uppercase + string.digits):
 	return ''.join(random.choice(chars) for _ in range(size))
+
+
+def get_address():
+	try:
+		
+		client=get_coinbase_client()
+	
+		primary_account = client.get_primary_account()
+		address_data = primary_account.create_address()
+		return address_data.address
+	except:
+		#messages.warning(self.request, 'Network Error please try again later')
+		return False
+
+def redirect_to_invest(request, status_of_message,message=''):
+	if status_of_message:
+		messages.success(request,message)
+	else:	
+		messages.warning(request, message)
+	return HttpResponseRedirect(reverse('office:invest'))
+
+def get_balance(profile):
+	balance = int(profile.wallet)
+	return balance
+
+def get_profile(request):
+	profile=request.user.profile
+	return profile
+
+def get_plan(plan_name):
+	try:
+		plan=Plan.objects.get(name__icontains=plan_name)
+		return plan
+	except:
+		return False
+
+def get_coinbase_client():
+	try:
+
+		return  Client('qLfg5C9hhnEWL9tt',
+		            'qMwSqeIiDqeLCitIFnUjitX5EcGVgghF') 
+	except:
+		return False
+
+def convert_to_btc(amount):
+	rate=dollar_bitcoin_rate()
+	return float(amount)*float(rate)
+
+#from xeno_admin.views import convert_to_btc
+def dollar_bitcoin_rate():
+	client=get_coinbase_client()
+	rates = client.get_exchange_rates(currency='USD')
+	return  rates.rates.BTC
+
+
+
+
+def round_up_purchase(profile, balance, amount):
+	profile.wallet=balance-int(amount)
+	profile.save()
+
+def credit_account(profile, balance, amount):
+	profile.wallet=balance+int(amount)
+	profile.save()
+
+

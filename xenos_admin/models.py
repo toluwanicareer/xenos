@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from datetime import datetime, timedelta
 from django.utils import timezone
+from .core import bitcoin_dollar_rate, convert_to_dollar
 
 # Create your models here.
 
@@ -71,7 +72,7 @@ class Investment(models.Model):
 
 class Transaction(models.Model):
 	trans_type=models.CharField(max_length=200, choices=(('Credit', 'Credit'),('Withdrawal','Withdrwal')))
-	amount=models.IntegerField()
+	amount=models.IntegerField(null=True)
 	status=models.CharField(max_length=200, choices=(('Pending', 'Pending'), ('Success', 'Success')))
 	created_date=models.DateTimeField(auto_now_add=True)
 	user=models.ForeignKey(User, null=True)
@@ -83,9 +84,15 @@ class Transaction(models.Model):
 
 	def complete(self, amount):
 		'''
-		This function will activate any necessary object that the transaction is tied to.
+		This function will update your wallet 
 		'''
-		c=self.get_tied_object(self.bitaddress, self.model_id)
+
+		rate=bitcoin_dollar_rate()
+		dollar_amount=covert_to_dollar(amount)
+		self.amount=dollar_amount
+		self.status='Success'
+		return amount
+
 	
 
 
@@ -123,4 +130,5 @@ class xenos_payment(models.Model):
 
 	def __str__(self):
 		return self.bot.plan_name
+
 
