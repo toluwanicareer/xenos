@@ -12,7 +12,7 @@ class Profile(models.Model):
 	user = models.OneToOneField(User, related_name="profile", on_delete=models.CASCADE)
 	passport=models.ImageField(null=True)
 	phone=models.CharField(null=True, max_length=200)
-	wallet=models.DecimalField(max_length=20, decimal_places=10,max_digits=19, null=True )
+	wallet=models.DecimalField(max_length=20, decimal_places=10,max_digits=19, default=0 )
 	referer=models.CharField(max_length=200, null=True)
 	id_image=models.ImageField(null=True)
 	

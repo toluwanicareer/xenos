@@ -203,11 +203,44 @@
 	  	{% for transaction in pending_transactions %}
 		<tr>
 		  
-		  <td>{{transaction.trans_type}}</td>
+		  <td><a class="js_modal_tans" address="{{transaction.bitaddress}}" href="#" data-toggle="modal">{{transaction.trans_type}}</a></td>
 		  <td>{{transaction.amount|default:"0"}}</td>
 		  <td>{{transaction.created_date}}</td>
 		  <td>{{transaction.status}}</td>
 		  <td>{{transaction.info}}</td>
+
+		  
+		</tr>
+		{% endfor %}
+		
+	  </tbody>
+	</table>
+</div>
+
+	<br />
+	<!-- <hr /> -->
+	<br />
+
+<div class="planinfo span6">
+		<h3>Bot Purchased</h3>
+		<hr>
+	<table class="table table-striped">
+	  <thead>
+		<tr>
+		  
+		  <th>Name</th>
+		 
+
+		  
+		</tr>
+	  </thead>
+	  <tbody>
+	  	{% for bot in bot_owned %}
+		<tr>
+		  
+		 
+		  <td>{{bot.bot.plan_name}}</td>
+		 
 
 		  
 		</tr>
@@ -235,13 +268,18 @@
 		        </button>
 		      </div>
 		      <div class="modal-body ">
+
+		      	<div class="alert alert-warning alert-dismissable validation__box" style="display:none">
+                  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                  <strong id="validation_error"></strong>
+                </div>
 		        <div class="control-group">
 					<h4>Amount In dollar($) </h4>
 					<h3>Plan : {{plan.name}}</h3>
 					<h3>Min : {{plan.minimum}}</h3>
 					<h3>Max : {{plan.maximum}}</h3>
 					<div class="controls">
-					<form method="post" action="{% url 'office:invest_pay'%}">	
+					<form method="post" id="form_investment" action="{% url 'office:invest_pay'%}">	
 						{% csrf_token %}
 						<input type="hidden"  name='plan' value="{{plan.name}}">
 						<input type="number" id="dollar_amount" name='amount' placeholder="Type something here..." style="width:100%">
@@ -255,7 +293,7 @@
 		      <div class="modal-footer">
 		      	
 		        
-		        <button type="submit" class="btn btn-primary" >Pay With Wallet</button>
+		        <button id="investment_submit" class="btn btn-primary" >Pay With Wallet</button>
 
 		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 		      </div>
@@ -266,6 +304,24 @@
 
 	
 	</br>
+
+	<div class="modal fade planinfo" id="trans_modal">
+		 <div class="modal-content">
+		 	<div class="modal-header">
+		 		<h5 class="modal-title">Complete payment by paying to this address(BTC) </h5>
+		 		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+		 	</div>
+		 	<div class="modal-body ">
+		 		<p>Please copy this address to deposit your bitocin. Your wallet will be updaed to reflect the changes</p>
+		 		<p style="color:red" id="trans_address"></p>
+		 	</div>
+
+		 </div>
+
+
+	</div>
 	
 
 
@@ -275,26 +331,36 @@
 
 {% block scripts %}
 	<script>
-	$('#wallet').click(function(event) {
-		
-    event.preventDefault();
-    plan=$('#name').text()
-   	amount=$('#dollar_amount').val();
-   	method=$(this).attr('payt_method');
-   	
-   	if  (amount){
+	
+
+	$('.js_modal_tans').click(function(event){
+		event.preventDefault();
+		address=$(this).attr('address');
+		$('#trans_address').text(address);
+		$('#trans_modal').modal();
+
+	});
+
+	$('#investment_submit').click(function(event){
+		event.preventDefault();
+		amount=$('#dollar_amount').val();
+		plan=$('#name').text()
+		if  (amount){
    			
    			a=checkplan(plan,amount)
-   			
-   			if (a){
-   				console.log(a)
-   		window.location="{% url 'office:pay'%}?method="+method+"&amount="+amount+"&plan="+plan;
-   	}
-   	}
-   	
-   	
 
-});
+   			if (a){
+   				
+   				$('#form_investment').submit();
+   			}
+   			else{
+   				$('#validation_error').text('The amount you entered didnt validate. Please make sure it is within the minum and maximum value')
+   				$('.validation__box').css('display','block');
+
+   				console.log('Validation fail')
+   			}
+   		}
+	})
 
 	function checkplan(plan, value){
 		if (plan == 'Basic'){
@@ -309,7 +375,8 @@
 			}
 		}
 		if (plan == 'Vip' ){
-			if(value <= 5010 && value >= 100000){
+			
+			if(value <= 100000 && value >= 5010){
 				return true;
 			}
 		}

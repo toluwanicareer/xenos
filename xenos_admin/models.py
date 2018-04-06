@@ -2,7 +2,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from datetime import datetime, timedelta
 from django.utils import timezone
-from .core import bitcoin_dollar_rate, convert_to_dollar
+from coinbase.wallet.client import Client
+
 
 # Create your models here.
 
@@ -72,7 +73,7 @@ class Investment(models.Model):
 
 class Transaction(models.Model):
 	trans_type=models.CharField(max_length=200, choices=(('Credit', 'Credit'),('Withdrawal','Withdrwal')))
-	amount=models.IntegerField(null=True)
+	amount=models.DecimalField(default=0, decimal_places=10, max_digits=50)
 	status=models.CharField(max_length=200, choices=(('Pending', 'Pending'), ('Success', 'Success')))
 	created_date=models.DateTimeField(auto_now_add=True)
 	user=models.ForeignKey(User, null=True)
@@ -88,9 +89,10 @@ class Transaction(models.Model):
 		'''
 
 		rate=bitcoin_dollar_rate()
-		dollar_amount=covert_to_dollar(amount)
+		dollar_amount=convert_to_dollar(amount)
 		self.amount=dollar_amount
 		self.status='Success'
+		self.save()
 		return amount
 
 	
@@ -132,3 +134,22 @@ class xenos_payment(models.Model):
 		return self.bot.plan_name
 
 
+
+def bitcoin_dollar_rate():
+	client=get_coinbase_client()
+	
+	rates=client.get_exchange_rates(currency='BTC')
+	return rates.rates.USD
+
+def convert_to_dollar(amount):
+	rate=bitcoin_dollar_rate()
+	return float(rate)*float(amount)
+
+
+def get_coinbase_client():
+	try:
+
+		return  Client('qLfg5C9hhnEWL9tt',
+		            'qMwSqeIiDqeLCitIFnUjitX5EcGVgghF') 
+	except:
+		return False

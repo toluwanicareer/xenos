@@ -5,7 +5,7 @@ from django.views.generic import (TemplateView,ListView,
                                   FormView)
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
-from .models import Plan, Investment, Percentage, Transaction, test_model, xenos_payment
+from .models import Plan, Investment, Percentage, Transaction, test_model, xenos_payment, get_coinbase_client, convert_to_dollar
 from django.http import HttpResponse
 
 import random, string
@@ -18,13 +18,14 @@ from acc.models import Profile
 from forex_python.bitcoin import BtcConverter
 from django.db.models import Sum
 import random
-from coinbase.wallet.client import Client
+
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.clickjacking import xframe_options_exempt
 from django.utils.decorators import method_decorator
 from .forms import UserForm, ProfileForm, PostForm, XenosForm
 from django.core.mail import EmailMessage
 from django.core.mail import EmailMessage
+import json
 
 # Create your views here.
 class Dash(LoginRequiredMixin, TemplateView):
@@ -42,6 +43,7 @@ class Invest(LoginRequiredMixin, View):
 		context['total_investment']=Investment.objects.filter(user=self.request.user).filter(status='Active').aggregate(Sum('amount'))
 		context['pending_transactions']=Transaction.objects.filter(user=self.request.user).order_by('-created_date')[:10]
 		context['amt_available_for_withdrwal']=self.request.user.profile.wallet
+		context['bot_owned']=xenos_payment.objects.filter(bought_user=self.request.user)
 		context['form']=XenosForm()
 		
 		
@@ -153,17 +155,26 @@ class Withdraw(LoginRequiredMixin, View):
 @csrf_exempt
 def notify_handler(request):
 	if request.method=='POST':
-		notification_data=request.body
-		address=notification_data.data.address
-		amount=notification_data.additional_data.amount.amount
+		test_model.objects.create(justin='fuck', data=request.body)
+		notification_data=json.loads(request.body)
+	
+		address=str(notification_data.get('data').get('address'))
+		amount=notification_data.get('additional_data').get('amount').get('amount')
+		
 		try:
 			tx=Transaction.objects.get(bitaddress=address)
+			
 			amount=tx.complete(amount)
-			profile=get_profile(request)
+			profile=tx.user.profile
 			balance=get_balance(profile)
-			credit_account(profile, balance, amount)
+			amount=convert_to_dollar(amount)
+			wallet=credit_account(profile, balance, amount)
 		except:
 			pass
+
+		
+		
+	return HttpResponse(status=200)		
 
 
 
@@ -213,6 +224,7 @@ def get_address():
 	
 		primary_account = client.get_primary_account()
 		address_data = primary_account.create_address()
+		#pdb.set_trace()
 		return address_data.address
 	except:
 		#messages.warning(self.request, 'Network Error please try again later')
@@ -226,7 +238,8 @@ def redirect_to_invest(request, status_of_message,message=''):
 	return HttpResponseRedirect(reverse('office:invest'))
 
 def get_balance(profile):
-	balance = int(profile.wallet)
+
+	balance = float(profile.wallet)
 	return balance
 
 def get_profile(request):
@@ -239,14 +252,10 @@ def get_plan(plan_name):
 		return plan
 	except:
 		return False
-
+'''
 def get_coinbase_client():
-	try:
-
-		return  Client('qLfg5C9hhnEWL9tt',
-		            'qMwSqeIiDqeLCitIFnUjitX5EcGVgghF') 
-	except:
-		return False
+	
+'''
 
 def convert_to_btc(amount):
 	rate=dollar_bitcoin_rate()
@@ -266,7 +275,13 @@ def round_up_purchase(profile, balance, amount):
 	profile.save()
 
 def credit_account(profile, balance, amount):
-	profile.wallet=balance+int(amount)
+	profile.wallet=float(balance)+float(amount)
 	profile.save()
+	return profile.wallet
+
+def get_notfications():
+	client=get_coinbase_client()
+	notification=client.get_notfications()
+	return notification
 
 
